@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpsPilot — Landing Page Proposals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    :root {
+      --g50:  #f4f8f0;
+      --g100: #e2edda;
+      --g200: #b8d49e;
+      --g400: #7caa56;
+      --g500: #64943E;
+      --g600: #5a833b;
+      --g700: #4e6e38;
+      --g800: #374030;
+      --g900: #323232;
+      --surface: #f8faf6;
+      --card: #ffffff;
+      --line: #eaecee;
+      --ink-300: #adb5bd;
+      --ink-400: #6c757d;
+      --ink-600: #343a40;
+      --ink-700: #212529;
+      --r-md: 0.6rem;
+      --r-lg: 0.9rem;
+      --r-xl: 1.15rem;
+      --r-2xl: 1.5rem;
+      --r-full: 999px;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.1);
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--ink-600);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Page background accent */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 55vw;
+      height: 55vw;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(100,148,62,0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { max-width: 72rem; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); position: relative; z-index: 1; }
+
+    /* Header */
+    .header {
+      padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248,250,246,0.85);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--ink-700);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .brand span { color: var(--g500); }
+    .headerMeta {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--ink-300);
+      font-weight: 500;
+    }
+
+    /* Hero */
+    .hero {
+      padding: clamp(3rem, 6vw, 5rem) 0 clamp(2rem, 4vw, 3rem);
+      text-align: center;
+    }
+    .heroBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: var(--r-full);
+      background: var(--g50);
+      border: 1px solid var(--g100);
+      color: var(--g700);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .heroBadge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--g500);
+    }
+    .heroTitle {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      color: var(--ink-700);
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .heroTitle em { font-style: normal; color: var(--g500); }
+    .heroSub {
+      font-size: 1.05rem;
+      color: var(--ink-400);
+      max-width: 44ch;
+      margin: 0 auto;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      padding-bottom: clamp(3rem, 6vw, 5rem);
+    }
+
+    /* Cards */
+    .card {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: var(--r-2xl);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--g200);
+    }
+
+    /* Card colour band — top accent bar per proposal */
+    .cardBand {
+      height: 5px;
+      border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+    }
+    .band-1 { background: linear-gradient(90deg, var(--g500), var(--g300)); }
+    .band-2 { background: linear-gradient(90deg, var(--g900), var(--g700)); }
+    .band-3 { background: linear-gradient(90deg, var(--g400), #a8d87a); }
+    .band-4 { background: linear-gradient(90deg, var(--g800), var(--g500)); }
+    .band-5 { background: linear-gradient(90deg, var(--g400), rgba(124,170,86,0.4)); }
+
+    /* Card preview thumbnail */
+    .cardThumb {
+      padding: 1rem 1rem 0;
+    }
+    .cardThumbInner {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    /* Stylised dummy thumbnails using CSS only */
+    .thumb-1 { background: linear-gradient(145deg, #f4f8f0, #e2edda); color: var(--g600); }
+    .thumb-2 { background: linear-gradient(145deg, #1a1a1a, #374030); }
+    .thumb-3 { background: linear-gradient(145deg, #374030, #4e6e38); }
+    .thumb-4 { background: linear-gradient(145deg, #1c2028, #374030); }
+    .thumb-5 { background: linear-gradient(145deg, #e8eff8, #d4e4f7); color: var(--g600); }
+
+    .cardBody { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .cardNum {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--g500);
+      margin-bottom: 0.4rem;
+    }
+    .cardTitle {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink-700);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    .cardDesc {
+      font-size: 0.875rem;
+      color: var(--ink-400);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .cardTags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 1rem;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--r-full);
+      background: var(--g50);
+      border: 1px solid var(--g100);
+      color: var(--g700);
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .cardCta {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--g500);
+    }
+    .cardCta::after {
+      content: "→";
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    .card:hover .cardCta::after { transform: translateX(4px); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 1.5rem 0 2.5rem;
+      color: var(--ink-300);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--line);
+    }
+    .footer a { color: var(--ink-400); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a class="brand" href="#">Ops<span>Pilot</span></a>
+    <span class="headerMeta">Design Review — 5 Landing Page Proposals</span>
+  </header>
+
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="heroBadge">Internal Review</div>
+      <h1 class="heroTitle">OpsPilot <em>Landing Page</em> Proposals</h1>
+      <p class="heroSub">Five distinct design directions for the Shopify App Store listing. Click any card to open the full page.</p>
+    </div>
+
+    <div class="grid">
+
+      <a class="card" href="proposal-1-clean-minimal.html">
+        <div class="cardBand band-1"></div>
+        <div class="cardThumb">
+          <div class="cardThumbInner thumb-1">Clean · Minimal · Light</div>
+        </div>
+        <div class="cardBody">
+          <p class="cardNum">Proposal 01</p>
+          <h2 class="cardTitle">Clean Minimal</h2>
+          <p class="cardDesc">Light background, Inter type, macOS-style three-pane mock UI in the hero. Crisp, professional, and easy to scan.</p>
+          <div class="cardTags">
+            <span class="tag">Light</span>
+            <span class="tag">Inter</span>
+            <span class="tag">3-pane hero</span>
+          </div>
+          <span class="cardCta">Open proposal</span>
+        </div>
+      </a>
+
+      <a class="card" href="proposal-2-terminal-dark.html">
+        <div class="cardBand band-2"></div>
+        <div class="cardThumb">
+          <div class="cardThumbInner thumb-2">Terminal · Dark · Code</div>
+        </div>
+        <div class="cardBody">
+          <p class="cardNum">Proposal 02</p>
+          <h2 class="cardTitle">Terminal Dark</h2>
+          <p class="cardDesc">Deep dark aesthetic with Sora + JetBrains Mono, animated gradient border glow, and a live terminal command center preview.</p>
+          <div class="cardTags">
+            <span class="tag">Dark</span>
+            <span class="tag">JetBrains Mono</span>
+            <span class="tag">Terminal UI</span>
+          </div>
+          <span class="cardCta">Open proposal</span>
+        </div>
+      </a>
+
+      <a class="card" href="proposal-3-bold-gradient.html">
+        <div class="cardBand band-3"></div>
+        <div class="cardThumb">
+          <div class="cardThumbInner thumb-3">Bold · Gradient · Hero</div>
+        </div>
+        <div class="cardBody">
+          <p class="cardNum">Proposal 03</p>
+          <h2 class="cardTitle">Bold Gradient</h2>
+          <p class="cardDesc">Full-width dark gradient hero section with a floating preview card that overlaps into the light content area. High visual impact.</p>
+          <div class="cardTags">
+            <span class="tag">Gradient hero</span>
+            <span class="tag">Sora</span>
+            <span class="tag">Floating card</span>
+          </div>
+          <span class="cardCta">Open proposal</span>
+        </div>
+      </a>
+
+      <a class="card" href="proposal-4-corporate-pro.html">
+        <div class="cardBand band-4"></div>
+        <div class="cardThumb">
+          <div class="cardThumbInner thumb-4">Split · Corporate · Pro</div>
+        </div>
+        <div class="cardBody">
+          <p class="cardNum">Proposal 04</p>
+          <h2 class="cardTitle">Corporate Pro</h2>
+          <p class="cardDesc">Two-column split hero — copy left, dark mock UI right. DM Sans + DM Mono for a polished, enterprise-ready feel.</p>
+          <div class="cardTags">
+            <span class="tag">Split layout</span>
+            <span class="tag">DM Sans</span>
+            <span class="tag">Dark preview</span>
+          </div>
+          <span class="cardCta">Open proposal</span>
+        </div>
+      </a>
+
+      <a class="card" href="proposal-5-modern-saas-glass.html">
+        <div class="cardBand band-5"></div>
+        <div class="cardThumb">
+          <div class="cardThumbInner thumb-5">Glass · SaaS · Frosted</div>
+        </div>
+        <div class="cardBody">
+          <p class="cardNum">Proposal 05</p>
+          <h2 class="cardTitle">Modern SaaS Glass</h2>
+          <p class="cardDesc">Glass morphism with floating pill header, frosted backdrop filters, and three animated glass cards in the hero. Contemporary SaaS aesthetics.</p>
+          <div class="cardTags">
+            <span class="tag">Glassmorphism</span>
+            <span class="tag">Outfit</span>
+            <span class="tag">Floating header</span>
+          </div>
+          <span class="cardCta">Open proposal</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>OpsPilot &middot; Internal design review &middot; <a href="mailto:support@opspilotflow.com">support@opspilotflow.com</a></p>
+  </footer>
+
+</body>
+</html>

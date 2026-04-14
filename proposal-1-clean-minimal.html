@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpsPilot — Proposal 1 · Clean Minimal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    :root {
+      --g50:  #f4f8f0;
+      --g100: #e2edda;
+      --g200: #b8d49e;
+      --g300: #96be74;
+      --g400: #7caa56;
+      --g500: #64943E;
+      --g600: #5a833b;
+      --g700: #4e6e38;
+      --g800: #374030;
+      --g900: #323232;
+      --surface: #fafbfc;
+      --card: #ffffff;
+      --line: #eef0f2;
+      --ink-50: #f8f9fa;
+      --ink-100: #e9ecef;
+      --ink-200: #dee2e6;
+      --ink-300: #adb5bd;
+      --ink-400: #6c757d;
+      --ink-500: #495057;
+      --ink-600: #343a40;
+      --ink-700: #212529;
+      --r-sm: 0.375rem; --r-md: 0.5rem; --r-lg: 0.75rem; --r-xl: 1rem; --r-2xl: 1.25rem; --r-full: 999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--ink-600);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 72rem; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(250,251,252,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+    }
+    .headerInner {
+      max-width: 72rem; margin: 0 auto;
+      display: flex; align-items: center; height: 3.75rem; gap: 1rem;
+    }
+    .brand { font-weight: 800; font-size: 1.15rem; color: var(--g800); text-decoration: none; letter-spacing: -0.02em; }
+    .brand span { color: var(--g500); }
+    .nav { display: flex; gap: 0.25rem; margin-left: auto; }
+    .nav a { color: var(--ink-400); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 0.4rem 0.75rem; border-radius: var(--r-full); transition: all 0.2s; }
+    .nav a:hover { color: var(--ink-700); background: var(--ink-50); }
+    .headerActions { display: flex; gap: 0.5rem; margin-left: 1rem; }
+    .btnGhost { color: var(--ink-500); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 0.5rem 0.85rem; border-radius: var(--r-full); transition: all 0.2s; }
+    .btnGhost:hover { background: var(--ink-50); }
+    .btnPrimary { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--g500); color: #fff; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1.1rem; border-radius: var(--r-full); text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+    .btnPrimary:hover { background: var(--g700); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: clamp(5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 6rem);
+    }
+    .heroBadge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.3rem 0.85rem; border-radius: var(--r-full);
+      background: var(--g50); border: 1px solid var(--g100);
+      color: var(--g700); font-size: 0.78rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .heroBadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--g500); }
+    .heroTitle {
+      max-width: 16ch; margin: 0 auto;
+      font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.04em; color: var(--ink-700);
+    }
+    .heroTitle em { font-style: normal; color: var(--g500); }
+    .heroSub {
+      max-width: 50ch; margin: 1.5rem auto 0;
+      font-size: 1.1rem; line-height: 1.7; color: var(--ink-400);
+    }
+    .heroActions { display: flex; justify-content: center; gap: 0.75rem; margin-top: 2.25rem; }
+    .btnSecondary { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--card); color: var(--ink-600); font-size: 0.95rem; font-weight: 600; padding: 0.75rem 1.35rem; border-radius: var(--r-lg); text-decoration: none; border: 1px solid var(--line); cursor: pointer; transition: all 0.2s; }
+    .btnSecondary:hover { border-color: var(--ink-200); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+    .btnHero { font-size: 0.95rem; padding: 0.75rem 1.5rem; border-radius: var(--r-lg); }
+
+    /* Stats bar */
+    .statsBar {
+      display: flex; justify-content: center; gap: 3rem;
+      margin-top: 3.5rem; padding: 1.75rem 0;
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .stat { text-align: center; }
+    .statNum { display: block; font-size: 1.75rem; font-weight: 800; color: var(--g600); letter-spacing: -0.02em; }
+    .statLabel { font-size: 0.82rem; color: var(--ink-300); font-weight: 500; margin-top: 0.15rem; }
+
+    /* ── HERO PREVIEW CARD ── */
+    .heroPreview {
+      max-width: 56rem; margin: 3rem auto 0;
+      border: 1px solid var(--line); border-radius: var(--r-xl);
+      background: var(--card); box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .previewBar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--ink-50); border-bottom: 1px solid var(--line);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; } .dot.y { background: #ffbd2e; } .dot.g { background: #28c840; }
+    .previewBarTitle { flex: 1; text-align: center; font-size: 0.75rem; color: var(--ink-300); font-weight: 500; }
+    .previewBody { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
+    .previewPane { background: var(--card); padding: 1.5rem; }
+    .previewPane h4 { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 700; color: var(--ink-600); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+    .previewPane h4 i { color: var(--g500); }
+    .metricGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .metricBox { padding: 0.65rem; border-radius: var(--r-sm); background: var(--ink-50); }
+    .metricBox span { display: block; font-size: 0.65rem; color: var(--ink-300); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+    .metricBox strong { display: block; margin-top: 0.2rem; font-size: 1rem; font-weight: 700; color: var(--g600); }
+    .miniChart { display: flex; align-items: flex-end; gap: 3px; height: 2.5rem; margin-top: 0.85rem; }
+    .miniChart span { flex: 1; border-radius: 2px 2px 0 0; background: var(--g200); }
+    .miniChart span:nth-child(1) { height: 45%; } .miniChart span:nth-child(2) { height: 75%; }
+    .miniChart span:nth-child(3) { height: 55%; } .miniChart span:nth-child(4) { height: 90%; }
+    .miniChart span:nth-child(5) { height: 65%; } .miniChart span:nth-child(6) { height: 80%; }
+    .miniChart span:nth-child(7) { height: 50%; }
+    .flowList { display: flex; flex-direction: column; gap: 0; }
+    .flowItem { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem; font-size: 0.85rem; color: var(--ink-500); position: relative; }
+    .flowItem:not(:last-child)::after { content: ""; position: absolute; left: calc(0.6rem + 4px); top: calc(0.6rem + 10px); width: 1.5px; height: calc(100% - 10px); background: var(--g200); }
+    .flowDot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--g400); background: var(--card); flex-shrink: 0; z-index: 1; }
+    .flowItem.active .flowDot { background: var(--g400); }
+    .pillGroup { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.65rem; border-radius: var(--r-full); background: var(--ink-50); color: var(--ink-500); font-size: 0.78rem; font-weight: 500; border: 1px solid var(--line); }
+
+    /* ── SECTIONS ── */
+    .section { padding: clamp(4rem, 7vw, 6rem) 0; }
+    .sectionHeader { text-align: center; max-width: 40rem; margin: 0 auto 3rem; }
+    .sectionEyebrow { display: inline-block; padding: 0.25rem 0.65rem; border-radius: var(--r-full); background: var(--g50); border: 1px solid var(--g100); color: var(--g700); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .sectionTitle { font-size: clamp(1.75rem, 3.5vw, 2.35rem); font-weight: 700; color: var(--ink-700); letter-spacing: -0.03em; line-height: 1.15; }
+    .sectionSub { max-width: 48ch; margin: 0.85rem auto 0; color: var(--ink-400); font-size: 1rem; line-height: 1.65; }
+
+    /* Feature cards */
+    .featureGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .card {
+      padding: 1.75rem; border: 1px solid var(--line); border-radius: var(--r-xl);
+      background: var(--card); box-shadow: var(--shadow-sm);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--g200); }
+    .cardIcon { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: var(--r-md); background: var(--g50); color: var(--g700); margin-bottom: 1.25rem; }
+    .card h3 { font-size: 1.05rem; font-weight: 700; color: var(--ink-700); margin-bottom: 0.65rem; }
+    .card p { color: var(--ink-400); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+    .cardList { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .cardList li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--ink-500); }
+    .checkIcon { width: 1rem; height: 1rem; color: var(--g500); flex-shrink: 0; }
+
+    /* Screenshots */
+    .screenshotGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .screenshotCard { border: 1px solid var(--line); border-radius: var(--r-xl); background: var(--card); box-shadow: var(--shadow-sm); overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+    .screenshotCard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .screenshotImage { aspect-ratio: 4/3; background: linear-gradient(145deg, var(--g800), var(--g900)); display: flex; flex-direction: column; padding: 1.25rem; position: relative; }
+    .screenshotImage::before { content: ""; position: absolute; top: 0.85rem; left: 1.25rem; width: 40px; height: 8px; background: radial-gradient(circle,#ff5f57 3.5px,transparent 3.5px) 0 0/14px 8px no-repeat, radial-gradient(circle,#ffbd2e 3.5px,transparent 3.5px) 14px 0/14px 8px no-repeat, radial-gradient(circle,#28c840 3.5px,transparent 3.5px) 28px 0/14px 8px no-repeat; opacity: 0.5; }
+    .screenshotImage.workflow { background: linear-gradient(145deg, #1c2e1c, var(--g800)); }
+    .screenshotImage.tasks { background: linear-gradient(145deg, #252525, var(--g900)); }
+    .screenshotHeader { display: flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.5); font-size: 0.72rem; font-weight: 600; margin-top: 1.2rem; letter-spacing: 0.04em; }
+    .screenshotMockUI { margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem; height: 55%; }
+    .mockLine { height: 0.4rem; border-radius: var(--r-full); background: rgba(255,255,255,0.1); }
+    .mockLine.w1_3 { width: 33%; } .mockLine.w1_2 { width: 50%; }
+    .mockChart { display: flex; align-items: flex-end; gap: 5px; height: 100%; margin-top: 0.75rem; }
+    .mockBar { flex: 1; border-radius: 3px 3px 0 0; }
+    .mockBar:nth-child(odd) { background: rgba(100,148,62,0.45); }
+    .mockBar:nth-child(even) { background: rgba(255,255,255,0.1); }
+    .mockNodeTree { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; height: 100%; justify-content: flex-end; }
+    .mockNode { padding: 0.35rem 0.7rem; background: rgba(100,148,62,0.18); border: 1px solid rgba(100,148,62,0.3); border-radius: 5px; color: rgba(255,255,255,0.8); font-size: 0.6rem; font-weight: 600; }
+    .mockEdge { width: 1px; height: 0.75rem; background: rgba(255,255,255,0.15); }
+    .mockNodeSplit { display: flex; gap: 0.75rem; }
+    .mockColumns { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.4rem; height: 100%; align-items: start; }
+    .mockCol { border-radius: 4px; background: rgba(255,255,255,0.05); padding: 0.35rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .mockTask { height: 1.4rem; background: rgba(255,255,255,0.1); border-radius: 3px; }
+    .screenshotContent { padding: 1.25rem; }
+    .screenshotContent h4 { font-size: 1.05rem; font-weight: 700; color: var(--ink-700); margin-bottom: 0.35rem; }
+    .screenshotContent p { color: var(--ink-400); font-size: 0.88rem; line-height: 1.55; }
+
+    /* FAQ */
+    .faqGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .faqItem { padding: 1.1rem 1.2rem; border: 1px solid var(--line); border-radius: var(--r-xl); background: var(--card); transition: border-color 0.2s, box-shadow 0.2s; }
+    .faqItem:hover, .faqItem[open] { border-color: var(--g200); box-shadow: var(--shadow-md); }
+    .faqQ { display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; list-style: none; font-size: 0.95rem; font-weight: 600; color: var(--ink-700); }
+    .faqQ::-webkit-details-marker { display: none; }
+    .faqMarker { display: inline-flex; align-items: center; justify-content: center; width: 1.65rem; height: 1.65rem; border-radius: 50%; background: var(--g50); color: var(--g700); font-size: 0.95rem; border: 1px solid var(--g100); transition: transform 0.3s; }
+    .faqItem[open] .faqMarker { transform: rotate(45deg); }
+    .faqA { margin-top: 0.85rem; color: var(--ink-400); font-size: 0.9rem; line-height: 1.65; max-width: 54ch; }
+
+    /* CTA */
+    .cta {
+      margin: 2rem 0 3rem; padding: clamp(2.5rem, 5vw, 3.5rem); text-align: center;
+      border-radius: var(--r-2xl); background: var(--g800); color: #fff;
+      box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+    }
+    .cta::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(100,148,62,0.5), transparent); }
+    .cta h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .cta > p { max-width: 44ch; margin: 0 auto 1.5rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .cta .btnPrimary { background: var(--g500); font-size: 0.95rem; padding: 0.8rem 1.35rem; border-radius: var(--r-lg); }
+    .cta .btnPrimary:hover { background: var(--g400); }
+    .supportText { margin-top: 1rem; color: rgba(255,255,255,0.35); font-size: 0.85rem; }
+    .supportText a { color: rgba(255,255,255,0.6); text-decoration: none; }
+
+    .footer { text-align: center; padding: 2rem 0 3rem; color: var(--ink-300); font-size: 0.82rem; }
+    .footer a { color: var(--ink-400); text-decoration: none; }
+
+    /* Animations */
+    .anim { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .anim.visible { opacity: 1; transform: translateY(0); }
+    .stagger > .anim:nth-child(2) { transition-delay: 0.08s; }
+    .stagger > .anim:nth-child(3) { transition-delay: 0.16s; }
+    .stagger > .anim:nth-child(4) { transition-delay: 0.24s; }
+    .stagger > .anim:nth-child(5) { transition-delay: 0.32s; }
+    .stagger > .anim:nth-child(6) { transition-delay: 0.4s; }
+    .stagger > .anim:nth-child(7) { transition-delay: 0.48s; }
+    .stagger > .anim:nth-child(8) { transition-delay: 0.56s; }
+
+    @media (max-width: 1024px) {
+      .nav { display: none; }
+      .statsBar { gap: 1.5rem; }
+      .previewBody { grid-template-columns: 1fr; }
+      .faqGrid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .heroTitle { max-width: none; }
+      .heroActions { flex-direction: column; align-items: center; }
+      .statsBar { flex-direction: column; gap: 1rem; }
+      .previewBody { grid-template-columns: 1fr; }
+    }
+
+    /* ── Feature Spotlight ── */
+    .spotlightSection { padding: clamp(4rem,7vw,6rem) 0; }
+    .spotlightGrid { display: flex; flex-direction: column; gap: clamp(3rem,6vw,5rem); }
+    .spotlightRow { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem,4vw,3.5rem); align-items: center; }
+    .spotlightImg { border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .spotlightImg img { width: 100%; height: auto; display: block; }
+    .spotlightText .sectionEyebrow { display: inline-block; margin-bottom: 0.65rem; }
+    .spotlightText h3 { font-size: clamp(1.35rem,2.5vw,1.75rem); font-weight: 700; color: var(--ink-700); letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 0.65rem; }
+    .spotlightText p { color: var(--ink-400); font-size: 0.95rem; line-height: 1.7; }
+    .spotlightRow.reverse .spotlightImg { order: 2; }
+    .spotlightRow.reverse .spotlightText { order: 1; }
+    @media (max-width: 768px) { .spotlightRow { grid-template-columns: 1fr; } .spotlightRow.reverse .spotlightImg { order: 0; } .spotlightRow.reverse .spotlightText { order: 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="headerInner">
+      <a class="brand" href="#">Ops<span>Pilot</span></a>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#why">Why OpsPilot</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="headerActions">
+        <a class="btnGhost" href="#">Log in</a>
+        <a class="btnPrimary" href="#">Install App</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="heroBadge">Shopify Automation &amp; Task Management</div>
+      <h1 class="heroTitle anim" data-anim>
+        Run your store with calm, <em>green-light clarity</em>
+      </h1>
+      <p class="heroSub anim" data-anim>
+        OpsPilot helps merchants automate daily operations with workflows, alerts, and task management.
+        Track orders, inventory, abandoned checkouts, and customer activity in one command center.
+      </p>
+      <div class="heroActions anim" data-anim>
+        <a class="btnPrimary btnHero" href="#">Install OpsPilot <i data-lucide="arrow-right" style="width:18px;height:18px"></i></a>
+        <a class="btnSecondary" href="#features">Explore features</a>
+      </div>
+
+      <div class="statsBar anim" data-anim>
+        <div class="stat"><span class="statNum">24/7</span><span class="statLabel">Store Monitoring</span></div>
+        <div class="stat"><span class="statNum">50+</span><span class="statLabel">Automation Templates</span></div>
+        <div class="stat"><span class="statNum">4</span><span class="statLabel">Integrations</span></div>
+        <div class="stat"><span class="statNum">&lt;2min</span><span class="statLabel">Setup Time</span></div>
+      </div>
+
+      <!-- Hero Preview Mock UI -->
+      <div class="heroPreview anim" data-anim>
+        <div class="previewBar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="previewBarTitle">OpsPilot — Live Operations</span>
+        </div>
+        <div class="previewBody">
+          <div class="previewPane">
+            <h4><i data-lucide="activity" style="width:14px;height:14px"></i> Dashboard</h4>
+            <div class="metricGrid">
+              <div class="metricBox"><span>Queue</span><strong>6</strong></div>
+              <div class="metricBox"><span>Active</span><strong>14</strong></div>
+              <div class="metricBox"><span>Revenue</span><strong>$2.4k</strong></div>
+              <div class="metricBox"><span>Tasks</span><strong>8</strong></div>
+            </div>
+            <div class="miniChart">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="previewPane">
+            <h4><i data-lucide="workflow" style="width:14px;height:14px"></i> Workflows</h4>
+            <div class="flowList">
+              <div class="flowItem active"><span class="flowDot"></span> Order received</div>
+              <div class="flowItem active"><span class="flowDot"></span> Check inventory</div>
+              <div class="flowItem"><span class="flowDot"></span> Notify via Slack</div>
+              <div class="flowItem"><span class="flowDot"></span> Log to Sheets</div>
+            </div>
+            <div class="pillGroup" style="margin-top:0.75rem">
+              <span class="pill">Slack</span>
+              <span class="pill">Email</span>
+              <span class="pill">Sheets</span>
+            </div>
+          </div>
+          <div class="previewPane">
+            <h4><i data-lucide="check-square" style="width:14px;height:14px"></i> Tasks</h4>
+            <div class="flowList">
+              <div class="flowItem active"><span class="flowDot"></span> VIP order flagged</div>
+              <div class="flowItem active"><span class="flowDot"></span> Low stock alert</div>
+              <div class="flowItem"><span class="flowDot"></span> Checkout follow-up</div>
+              <div class="flowItem"><span class="flowDot"></span> Inventory restock</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT SHOWCASE -->
+    <div class="heroPreview anim" data-anim style="margin-top:2rem;margin-bottom:0;box-shadow:var(--shadow-lg);">
+      <div class="previewBar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="previewBarTitle">OpsPilot — Your Store on Autopilot</span>
+      </div>
+      <img src="asets/1@2x.png" alt="OpsPilot — Your Store on Autopilot. Under Your Control." loading="eager" decoding="async" style="width:100%;display:block;" />
+    </div>
+
+    <!-- FEATURES -->
+    <section id="features" class="section">
+      <div class="sectionHeader">
+        <p class="sectionEyebrow anim" data-anim>Core Platform</p>
+        <h2 class="sectionTitle anim" data-anim>Everything you need to run your store</h2>
+        <p class="sectionSub anim" data-anim>Powerful tools designed specifically for Shopify merchants to streamline daily operations.</p>
+      </div>
+      <div class="featureGrid stagger" data-anim>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="activity" style="width:24px;height:24px"></i></div>
+          <h3>Real-Time Operations Dashboard</h3>
+          <p>Get a complete overview of store health and quickly identify issues.</p>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> High-value orders</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Abandoned checkouts</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Inventory risks</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Pending payments</li>
+          </ul>
+        </article>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="workflow" style="width:24px;height:24px"></i></div>
+          <h3>Shopify Workflow Automation</h3>
+          <p>Build flexible workflow automation for repetitive processes.</p>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Order, customer, product triggers</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Abandoned checkout triggers</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Condition and action logic</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Ready-to-use templates</li>
+          </ul>
+        </article>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="check-square" style="width:24px;height:24px"></i></div>
+          <h3>Automated Task Management</h3>
+          <p>Convert important events into actionable tasks for your team.</p>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Create tasks from events</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Assign ownership</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Kanban or table views</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Custom statuses and notes</li>
+          </ul>
+        </article>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="bell" style="width:24px;height:24px"></i></div>
+          <h3>Alerts and Notifications</h3>
+          <p>Stay informed when important events occur in your store.</p>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Email notifications</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Slack messages</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Google Sheets logging</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Activity history</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- SCREENSHOTS -->
+    <section id="screenshots" class="section">
+      <div class="sectionHeader">
+        <p class="sectionEyebrow anim" data-anim>Product Surfaces</p>
+        <h2 class="sectionTitle anim" data-anim>See OpsPilot in Action</h2>
+        <p class="sectionSub anim" data-anim>A clean, intuitive interface designed for speed and clarity.</p>
+      </div>
+      <div class="screenshotGrid stagger" data-anim>
+        <article class="screenshotCard anim">
+          <img src="asets/2@2x.png" alt="OpsPilot Real-Time Operational Health Dashboard" loading="lazy" decoding="async" style="width:100%;display:block;" />
+          <div class="screenshotContent"><h4>Real-Time Operational Health</h4><p>Prioritize risks and monitor store activity at a glance. Catch critical issues before they cost you.</p></div>
+        </article>
+        <article class="screenshotCard anim">
+          <img src="asets/3@2x.png" alt="OpsPilot Automation Engine" loading="lazy" decoding="async" style="width:100%;display:block;" />
+          <div class="screenshotContent"><h4>The Automation Engine</h4><p>Build powerful, logic-based workflows that run your store 24/7 with 35+ predefined templates.</p></div>
+        </article>
+        <article class="screenshotCard anim">
+          <img src="asets/7@2x.png" alt="OpsPilot Turn Alerts into Action — Kanban" loading="lazy" decoding="async" style="width:100%;display:block;" />
+          <div class="screenshotContent"><h4>Turn Alerts into Action</h4><p>A built-in Kanban workspace for your team's daily operations with one-click resolution.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FEATURE SPOTLIGHT -->
+    <section class="spotlightSection">
+      <div class="sectionHeader">
+        <p class="sectionEyebrow anim" data-anim>Platform Deep Dive</p>
+        <h2 class="sectionTitle anim" data-anim>Everything Connected, Nothing Missed</h2>
+        <p class="sectionSub anim" data-anim>From integrations to branding to intelligent automation — OpsPilot covers every layer.</p>
+      </div>
+      <div class="spotlightGrid">
+        <div class="spotlightRow anim" data-anim>
+          <div class="spotlightImg"><img src="asets/4@2x.png" alt="Stay Informed, Everywhere — Slack, Email, Google Sheets" loading="lazy" decoding="async" /></div>
+          <div class="spotlightText">
+            <p class="sectionEyebrow">Integrations</p>
+            <h3>Stay Informed, Everywhere.</h3>
+            <p>Connect your store to Slack, Google Sheets, and Email. Get instant team alerts anywhere, automated historical data logs, and professionally branded notifications delivered on cue.</p>
+          </div>
+        </div>
+        <div class="spotlightRow reverse anim" data-anim>
+          <div class="spotlightImg"><img src="asets/5@2x.png" alt="Tailored to Your Brand — White-label tools" loading="lazy" decoding="async" /></div>
+          <div class="spotlightText">
+            <p class="sectionEyebrow">White-Label</p>
+            <h3>Tailored to Your Brand.</h3>
+            <p>Advanced governance and white-label tools for high-volume stores. Custom Slack and Sheet branding, personalized sender emails, DNS verification, and 100% email delivery reached.</p>
+          </div>
+        </div>
+        <div class="spotlightRow anim" data-anim>
+          <div class="spotlightImg"><img src="asets/6@2x.png" alt="Turn Store Data into Action — Use cases" loading="lazy" decoding="async" /></div>
+          <div class="spotlightText">
+            <p class="sectionEyebrow">Use Cases</p>
+            <h3>Turn Store Data into Action.</h3>
+            <p>Automatically alert staff on unfulfilled orders, flag high-risk orders before shipping, and auto-tag VIP customers to trigger personalized follow-up — all without manual effort.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section id="why" class="section">
+      <div class="sectionHeader">
+        <p class="sectionEyebrow anim" data-anim>Why Teams Choose It</p>
+        <h2 class="sectionTitle anim" data-anim>Built for operators, not just dashboards</h2>
+        <p class="sectionSub anim" data-anim>OpsPilot keeps monitoring, automation, and follow-up connected.</p>
+      </div>
+      <div class="featureGrid stagger" data-anim>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="users" style="width:24px;height:24px"></i></div>
+          <h3>Team Collaboration</h3>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Task assignments and ownership</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Notes and attachments</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Activity logs</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Role-based admin settings</li>
+          </ul>
+        </article>
+        <article class="card anim">
+          <div class="cardIcon"><i data-lucide="zap" style="width:24px;height:24px"></i></div>
+          <h3>Integrations &amp; Templates</h3>
+          <ul class="cardList">
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Slack notifications</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Google Sheets automation</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Email alerts</li>
+            <li><i data-lucide="check-circle-2" class="checkIcon"></i> Ready-to-use workflow templates</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <div class="sectionHeader">
+        <p class="sectionEyebrow anim" data-anim>Common Questions</p>
+        <h2 class="sectionTitle anim" data-anim>FAQ</h2>
+        <p class="sectionSub anim" data-anim>Quick answers for merchants evaluating OpsPilot.</p>
+      </div>
+      <div class="faqGrid stagger" data-anim>
+        <details class="faqItem anim"><summary class="faqQ"><span>What does OpsPilot automate?</span><span class="faqMarker">+</span></summary><p class="faqA">OpsPilot automates operational follow-up across orders, customers, products, inventory, abandoned checkouts, and scheduled review workflows.</p></details>
+        <details class="faqItem anim"><summary class="faqQ"><span>Do I need technical knowledge?</span><span class="faqMarker">+</span></summary><p class="faqA">No. Start from templates or use the visual builder to configure triggers, conditions, and actions without code.</p></details>
+        <details class="faqItem anim"><summary class="faqQ"><span>Can it alert my team outside Shopify?</span><span class="faqMarker">+</span></summary><p class="faqA">Yes. Slack alerts, workflow emails, and Google Sheets logging keep teams aligned across tools.</p></details>
+        <details class="faqItem anim"><summary class="faqQ"><span>Is it useful for teams?</span><span class="faqMarker">+</span></summary><p class="faqA">Yes. Task assignment, notes, activity history, and shared workflow-driven follow-up for multiple operators.</p></details>
+        <details class="faqItem anim"><summary class="faqQ"><span>Can I test workflows first?</span><span class="faqMarker">+</span></summary><p class="faqA">Yes. Test actions let you run scheduled workflows manually or test with the latest order, product, or customer payload.</p></details>
+        <details class="faqItem anim"><summary class="faqQ"><span>Can I start with templates?</span><span class="faqMarker">+</span></summary><p class="faqA">Yes. Use built-in templates as a starting point, then adjust everything at any time.</p></details>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <h2 class="anim" data-anim>Ready to automate your store?</h2>
+      <p class="anim" data-anim>Join merchants who use OpsPilot to automate operations, reduce errors, and save hours every week.</p>
+      <a class="btnPrimary anim" data-anim href="#">Start with OpsPilot <i data-lucide="arrow-right" style="width:18px;height:18px"></i></a>
+      <p class="supportText anim" data-anim>Questions? <a href="mailto:support@opspilotflow.com">support@opspilotflow.com</a> &middot; <a href="#">Privacy</a></p>
+      <img src="asets/8@2x.png" alt="Install OpsPilot on Shopify — Available now on the Shopify App Store" loading="lazy" decoding="async" class="anim" data-anim style="max-width:38rem;width:90%;margin:2.5rem auto 0;display:block;border-radius:var(--r-xl);opacity:0.9;" />
+    </section>
+
+    <footer class="footer"><p>&copy; 2025 OpsPilot &middot; Built for Shopify merchants &middot; <a href="mailto:support@opspilotflow.com">support@opspilotflow.com</a></p></footer>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    (function(){
+      if (!("IntersectionObserver" in window)) { document.querySelectorAll(".anim").forEach(function(e){e.classList.add("visible")}); return; }
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            if(entry.target.classList.contains("anim")){entry.target.classList.add("visible");}
+            entry.target.querySelectorAll(".anim").forEach(function(c){c.classList.add("visible");});
+            obs.unobserve(entry.target);
+          }
+        });
+      },{rootMargin:"-8% 0px"});
+      document.querySelectorAll("[data-anim]").forEach(function(e){obs.observe(e);});
+    })();
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener("click",function(e){var t=document.querySelector(this.getAttribute("href"));if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth"});}});});
+  </script>
+</body>
+</html>

@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpsPilot — Shopify Automation, Alerts &amp; Task Management</title>
+  <meta name="description" content="OpsPilot helps merchants automate daily operations with workflows, alerts, and task management." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       RESET
+       ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { text-rendering: optimizeLegibility; }
+
+    /* ═══════════════════════════════════════════════════════════
+       DESIGN TOKENS  —  #F1F3F4 · #64943E · #374030 · #323232
+       ═══════════════════════════════════════════════════════════ */
+    .page {
+      --g50:  #f4f8f0;
+      --g100: #e2edda;
+      --g200: #b8d49e;
+      --g300: #96be74;
+      --g400: #7caa56;
+      --g500: #64943E;
+      --g600: #5a833b;
+      --g700: #4e6e38;
+      --g800: #374030;
+      --g900: #323232;
+
+      --ink-50:  #F1F3F4;
+      --ink-100: #e5e7eb;
+      --ink-200: #d1d5db;
+      --ink-300: #9ca3af;
+      --ink-400: #6b7280;
+      --ink-500: #4b5563;
+      --ink-600: #374151;
+      --ink-700: #323232;
+      --ink-800: #262626;
+      --ink-900: #1a1a1a;
+
+      --surface:  #F1F3F4;
+      --card:     #ffffff;
+      --line:     #e0e3e6;
+
+      --shadow-xs: 0 1px 2px rgba(50,50,48,0.05);
+      --shadow-sm: 0 2px 6px rgba(50,50,48,0.06), 0 1px 2px rgba(50,50,48,0.04);
+      --shadow-md: 0 4px 14px rgba(50,50,48,0.08), 0 1px 3px rgba(50,50,48,0.04);
+      --shadow-lg: 0 8px 28px rgba(50,50,48,0.1), 0 2px 6px rgba(50,50,48,0.04);
+      --shadow-xl: 0 20px 50px rgba(50,50,48,0.14), 0 4px 10px rgba(50,50,48,0.06);
+
+      --r-sm:   0.5rem;
+      --r-md:   0.75rem;
+      --r-lg:   1rem;
+      --r-xl:   1.25rem;
+      --r-2xl:  1.5rem;
+      --r-3xl:  2rem;
+      --r-full: 999px;
+
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--surface);
+      color: var(--ink-700);
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 0;
+    }
+
+    /* ── ambient bg ── */
+    .page::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, rgba(50,50,50,0.028) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .page::after {
+      content: "";
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 45% at 8% 0%, rgba(100,148,62,0.06), transparent),
+        radial-gradient(ellipse 55% 35% at 92% 4%, rgba(55,64,48,0.04), transparent);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .backgroundGlow {
+      position: fixed;
+      top: -18%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110vw;
+      height: 55vh;
+      background: radial-gradient(ellipse 48% 55% at 50% 18%, rgba(100,148,62,0.06), transparent);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 76rem;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+      position: relative;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CURSOR GLOW  —  follows mouse, blends with palette
+       ═══════════════════════════════════════════════════════════ */
+    .cursorGlow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,148,62,0.07), transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s ease;
+      opacity: 0;
+    }
+    .cursorGlow.active { opacity: 1; }
+
+    /* ═══════════════════════════════════════════════════════════
+       HEADER  —  floating pill
+       ═══════════════════════════════════════════════════════════ */
+    .header {
+      position: sticky;
+      top: 0.75rem;
+      z-index: 40;
+      margin-top: 0.75rem;
+      padding: 0 0.5rem 0 1rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-full);
+      background: rgba(241,243,244,0.75);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      box-shadow: var(--shadow-md);
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; flex-shrink: 0; }
+    .brandLogoFull { display: block; width: auto; height: 1.75rem; object-fit: contain; }
+    .brandLogoIcon { display: none; width: 1.75rem; height: 1.75rem; object-fit: contain; }
+    .nav { display: flex; align-items: center; justify-content: center; gap: 0.15rem; flex: 1; min-width: 0; }
+
+    .nav a, .loginLink, .installButton, .primaryButton, .secondaryButton {
+      transition: all 0.22s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .nav a {
+      color: var(--ink-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.7rem;
+      border-radius: var(--r-full);
+      white-space: nowrap;
+    }
+    .nav a:hover { background: rgba(255,255,255,0.6); color: var(--ink-700); }
+
+    .headerActions { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+
+    .loginLink {
+      color: var(--ink-500);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--r-full);
+    }
+    .loginLink:hover { background: rgba(255,255,255,0.6); color: var(--ink-700); }
+
+    .installButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.5rem;
+      padding: 0 1.15rem;
+      border-radius: var(--r-full);
+      background: var(--g800);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: none;
+      box-shadow: var(--shadow-sm);
+    }
+    .installButton:hover {
+      background: var(--g900);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════════ */
+    .hero { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 5rem); }
+
+    .heroShell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      padding: clamp(2rem, 3vw, 2.75rem);
+      border: 1px solid var(--line);
+      border-radius: var(--r-2xl);
+      background: var(--card);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .heroShell::before {
+      content: "";
+      position: absolute;
+      width: 30rem; height: 30rem;
+      top: -18rem; right: -8rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,148,62,0.05), transparent 60%);
+      z-index: -1;
+    }
+
+    .heroContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 48rem;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--r-full);
+      border: 1px solid var(--g200);
+      background: var(--g50);
+      color: var(--g700);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .badgeDot {
+      width: 0.5rem; height: 0.5rem;
+      border-radius: 50%;
+      background: var(--g500);
+      box-shadow: 0 0 0 3px rgba(100,148,62,0.15);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(100,148,62,0.3); }
+      50%      { box-shadow: 0 0 0 6px rgba(100,148,62,0);  }
+    }
+
+    .heroTitle {
+      margin: 1.25rem 0 0;
+      max-width: 18ch;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--ink-900);
+      text-align: center;
+    }
+
+    .heroTitleHighlight {
+      display: inline;
+      background: linear-gradient(135deg, var(--g800) 0%, var(--g500) 55%, var(--g400) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .heroText {
+      margin: 1.25rem 0 0;
+      max-width: 52ch;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--ink-400);
+      text-align: center;
+    }
+
+    .heroActions { display: flex; gap: 0.75rem; margin-top: 2rem; }
+
+    .primaryButton, .secondaryButton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: var(--r-lg);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      border: none;
+      cursor: pointer;
+    }
+
+    .primaryButton {
+      background: var(--g500);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1), 0 4px 14px rgba(100,148,62,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .primaryButton::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent);
+      transform: skewX(-20deg);
+      animation: shine 5s ease-in-out infinite;
+    }
+    @keyframes shine { 0% { left:-100%; } 15% { left:150%; } 100% { left:150%; } }
+    .primaryButton:hover {
+      background: var(--g700);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 10px 24px rgba(100,148,62,0.35);
+    }
+
+    .secondaryButton {
+      background: var(--card);
+      color: var(--ink-600);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-xs);
+    }
+    .secondaryButton:hover {
+      transform: translateY(-1px);
+      border-color: var(--ink-200);
+      box-shadow: var(--shadow-sm);
+      background: var(--ink-50);
+    }
+
+    .heroHighlights {
+      width: 100%;
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .heroHighlight {
+      padding: 0.9rem;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--line);
+      background: var(--ink-50);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .heroHighlight::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: var(--g500);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .heroHighlight span {
+      display: block;
+      padding-left: 0.5rem;
+      color: var(--g600);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .heroHighlight strong {
+      display: block;
+      padding-left: 0.5rem;
+      margin-top: 0.3rem;
+      color: var(--ink-600);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .keywordTags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0;
+      list-style: none;
+    }
+    .keywordTags li {
+      padding: 0.28rem 0.7rem;
+      border-radius: var(--r-full);
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink-400);
+      font-size: 0.76rem;
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO PREVIEW  —  Live Terminal / Command Center
+       ═══════════════════════════════════════════════════════════ */
+    /* ── Showcase wrapper: sits below heroShell, overlaps into features ── */
+    .heroPreviewWrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: -1.5rem;
+      margin-bottom: -3rem;
+      position: relative;
+      z-index: 5;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    .heroPreview {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      width: 100%;
+      max-width: 52rem;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      background: var(--g900);
+      box-shadow:
+        var(--shadow-xl),
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 0 80px -20px rgba(100,148,62,0.15);
+    }
+
+    /* animated gradient border glow */
+    .heroPreview::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: conic-gradient(from var(--border-angle, 0deg),
+        transparent 25%, var(--g500) 50%, transparent 75%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotateBorder 6s linear infinite;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @property --border-angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes rotateBorder {
+      to { --border-angle: 360deg; }
+    }
+
+    /* title bar */
+    .termTitleBar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    .termDots {
+      display: flex;
+      gap: 5px;
+    }
+    .termDots span {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .termDots span:nth-child(1) { background: #ff5f57; }
+    .termDots span:nth-child(2) { background: #ffbd2e; }
+    .termDots span:nth-child(3) { background: #28c840; }
+
+    .termTitle {
+      flex: 1;
+      text-align: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.04em;
+    }
+
+    .termBody {
+      padding: 0.85rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* scan line */
+    .termBody::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(100,148,62,0.2), transparent);
+      animation: scanLine 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanLine {
+      0%   { top: 0; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .previewHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .previewBadge, .previewStatus {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 1.65rem;
+      padding: 0 0.6rem;
+      border-radius: var(--r-full);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .previewBadge {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .previewStatus {
+      background: rgba(100,148,62,0.12);
+      color: var(--g300);
+      gap: 0.35rem;
+      border: 1px solid rgba(100,148,62,0.2);
+    }
+
+    .statusDot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 6px var(--g500);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .previewStack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+    }
+
+    .previewCard {
+      padding: 0.75rem;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.03);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .previewCard:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(100,148,62,0.2);
+    }
+
+    .previewCardHeader {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.85);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .iconAccent { color: var(--g400); }
+
+    /* Metric row with animated numbers */
+    .previewMetricRow {
+      margin-top: 0.65rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+    }
+    .previewMetricRow div {
+      padding: 0.6rem;
+      border-radius: var(--r-sm);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.3s ease;
+    }
+    .previewMetricRow div:hover { background: rgba(255,255,255,0.06); }
+    .previewMetricRow span {
+      display: block;
+      font-family: "JetBrains Mono", monospace;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.62rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .previewMetricRow strong {
+      display: block;
+      margin-top: 0.25rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.3;
+    }
+
+    .metricNum {
+      color: var(--g400);
+      font-weight: 700;
+    }
+
+    /* Mini live bar chart */
+    .miniChart {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 2rem;
+      margin-top: 0.6rem;
+      padding: 0 0.1rem;
+    }
+    .miniChart span {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      background: var(--g500);
+      opacity: 0.6;
+      animation: barPulse 3s ease-in-out infinite;
+      transition: opacity 0.3s ease;
+    }
+    .miniChart span:hover { opacity: 1; }
+    .miniChart span:nth-child(1) { height: 45%; animation-delay: 0s; }
+    .miniChart span:nth-child(2) { height: 75%; animation-delay: 0.3s; }
+    .miniChart span:nth-child(3) { height: 55%; animation-delay: 0.6s; }
+    .miniChart span:nth-child(4) { height: 90%; animation-delay: 0.9s; }
+    .miniChart span:nth-child(5) { height: 65%; animation-delay: 1.2s; }
+    .miniChart span:nth-child(6) { height: 80%; animation-delay: 1.5s; }
+    .miniChart span:nth-child(7) { height: 50%; animation-delay: 1.8s; }
+
+    @keyframes barPulse {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.7); }
+    }
+
+    /* Workflow chain with connected steps */
+    .previewFlow {
+      margin-top: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .flowStep {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.7rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      position: relative;
+    }
+
+    .flowDot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid var(--g500);
+      background: var(--g900);
+      position: relative;
+      z-index: 1;
+    }
+
+    .flowStep.active .flowDot {
+      background: var(--g500);
+      box-shadow: 0 0 8px rgba(100,148,62,0.5);
+    }
+
+    /* vertical connector line */
+    .flowStep:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: calc(0.7rem + 3px);
+      top: calc(0.55rem + 8px);
+      width: 2px;
+      height: calc(100% - 8px);
+      background: rgba(100,148,62,0.25);
+    }
+
+    .flowLabel { opacity: 0.85; }
+    .flowStep:nth-child(1) .flowLabel { animation: typeIn 0.6s ease-out 0.3s both; }
+    .flowStep:nth-child(2) .flowLabel { animation: typeIn 0.6s ease-out 0.8s both; }
+    .flowStep:nth-child(3) .flowLabel { animation: typeIn 0.6s ease-out 1.3s both; }
+
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 0.85; transform: translateX(0); }
+    }
+
+    /* Integration pills */
+    .previewPills {
+      margin-top: 0.65rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .previewPills span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      height: 1.55rem;
+      padding: 0 0.55rem;
+      border-radius: var(--r-full);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.65);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .previewPills span:hover {
+      background: rgba(100,148,62,0.15);
+      color: var(--g300);
+      border-color: rgba(100,148,62,0.25);
+    }
+
+    .pillIcon { width: 10px; height: 10px; opacity: 0.6; }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTIONS
+       ═══════════════════════════════════════════════════════════ */
+    .section { padding: clamp(4rem, 7vw, 6rem) 0; position: relative; }
+    #major-features, #screenshots, #why-opspilot, #faq { scroll-margin-top: 5rem; }
+    .section + .section { padding-top: clamp(2rem, 4vw, 3rem); }
+    .section + .section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 50%;
+      width: min(4rem, 14vw);
+      height: 1px;
+      transform: translateX(-50%);
+      background: var(--line);
+    }
+
+    .sectionHeader { max-width: 40rem; text-align: center; margin: 0 auto 3rem; }
+
+    .sectionEyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0 0.75rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: var(--r-full);
+      background: var(--g50);
+      border: 1px solid var(--g100);
+      color: var(--g700);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .sectionTitle {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink-900);
+      line-height: 1.15;
+    }
+
+    .sectionSubtitle {
+      max-width: 48ch;
+      margin: 0.85rem auto 0;
+      color: var(--ink-400);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FEATURE CARDS
+       ═══════════════════════════════════════════════════════════ */
+    .featureGrid, .split {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 1.75rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--g500), var(--g300));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--g200);
+      box-shadow: var(--shadow-lg);
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover .cardIcon { transform: scale(1.08); background: var(--g100); }
+
+    .cardIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem; height: 2.75rem;
+      margin-bottom: 1.25rem;
+      border-radius: var(--r-md);
+      background: var(--g50);
+      color: var(--g700);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .card h3 {
+      margin: 0 0 0.65rem;
+      font-family: "Sora", sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink-800);
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      margin: 0 0 1.15rem;
+      color: var(--ink-400);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .cardList { display: flex; flex-direction: column; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+    .cardList li { display: flex; align-items: center; gap: 0.6rem; color: var(--ink-500); font-size: 0.88rem; line-height: 1.4; }
+    .checkIcon { flex-shrink: 0; width: 1rem; height: 1rem; color: var(--g500); }
+
+    /* ═══════════════════════════════════════════════════════════
+       SCREENSHOTS
+       ═══════════════════════════════════════════════════════════ */
+    .screenshotGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1rem;
+    }
+
+    .screenshotCard {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .screenshotCard:hover {
+      transform: translateY(-5px);
+      border-color: var(--g200);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .screenshotImage {
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 1.25rem;
+      background: linear-gradient(145deg, var(--g900) 0%, var(--g800) 100%);
+    }
+
+    .screenshotImage::before {
+      content: "";
+      position: absolute;
+      top: 0.85rem; left: 1.25rem;
+      width: 40px; height: 8px;
+      background:
+        radial-gradient(circle,#ff5f57 3.5px,transparent 3.5px) 0 0/14px 8px no-repeat,
+        radial-gradient(circle,#ffbd2e 3.5px,transparent 3.5px) 14px 0/14px 8px no-repeat,
+        radial-gradient(circle,#28c840 3.5px,transparent 3.5px) 28px 0/14px 8px no-repeat;
+      opacity: 0.5;
+    }
+
+    .screenshotImage.workflow { background: linear-gradient(145deg, #1c2e1c 0%, var(--g800) 100%); }
+    .screenshotImage.tasks { background: linear-gradient(145deg, #252525 0%, var(--g900) 100%); }
+
+    .screenshotHeader {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: rgba(255,255,255,0.55);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      letter-spacing: 0.04em;
+    }
+
+    .screenshotMockUI { margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem; height: 55%; }
+    .mockLine { height: 0.4rem; border-radius: var(--r-full); background: rgba(255,255,255,0.1); }
+    .mockLine.w1_3 { width: 33%; }
+    .mockLine.w1_2 { width: 50%; }
+    .mockChart { display: flex; align-items: flex-end; gap: 5px; height: 100%; margin-top: 0.75rem; }
+    .mockBar { flex: 1; border-radius: 3px 3px 0 0; }
+    .mockBar:nth-child(odd) { background: rgba(100,148,62,0.45); }
+    .mockBar:nth-child(even) { background: rgba(255,255,255,0.1); }
+    .mockNodeTree { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; height: 100%; justify-content: flex-end; }
+    .mockNode { padding: 0.35rem 0.7rem; background: rgba(100,148,62,0.18); border: 1px solid rgba(100,148,62,0.3); border-radius: 5px; color: rgba(255,255,255,0.8); font-family: "JetBrains Mono", monospace; font-size: 0.6rem; font-weight: 600; }
+    .mockEdge { width: 1px; height: 0.75rem; background: rgba(255,255,255,0.15); }
+    .mockNodeSplit { display: flex; gap: 0.75rem; position: relative; }
+    .mockNodeSplit::before { content:""; position: absolute; top: -0.4rem; left: 20%; right: 20%; height: 1px; background: rgba(255,255,255,0.15); }
+    .mockColumns { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.4rem; height: 100%; align-items: flex-start; }
+    .mockCol { border-radius: 4px; background: rgba(255,255,255,0.05); padding: 0.35rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .mockTask { height: 1.4rem; background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    .screenshotCardContent { padding: 1.25rem; }
+    .screenshotCardContent h4 { margin: 0 0 0.35rem; font-family: "Sora", sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--ink-800); }
+    .screenshotCardContent p { margin: 0; color: var(--ink-400); font-size: 0.88rem; line-height: 1.55; }
+
+    /* ═══════════════════════════════════════════════════════════
+       FAQ
+       ═══════════════════════════════════════════════════════════ */
+    .faqGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0.75rem; align-items: start; }
+
+    .faqItem {
+      align-self: start;
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      background: var(--card);
+      box-shadow: var(--shadow-xs);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .faqItem:hover { border-color: var(--g200); box-shadow: var(--shadow-sm); }
+    .faqItem[open] { border-color: var(--g200); box-shadow: var(--shadow-md); }
+
+    .faqQuestion {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      list-style: none;
+      font-family: "Sora", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink-800);
+    }
+    .faqQuestion::-webkit-details-marker { display: none; }
+
+    .faqMarker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.65rem; height: 1.65rem;
+      flex-shrink: 0;
+      border-radius: var(--r-full);
+      background: var(--g50);
+      color: var(--g700);
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid var(--g100);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .faqItem[open] .faqMarker { transform: rotate(45deg); background: var(--g100); }
+
+    .faqAnswer { margin: 0.85rem 0 0; color: var(--ink-400); font-size: 0.9rem; line-height: 1.65; max-width: 54ch; }
+
+    /* ═══════════════════════════════════════════════════════════
+       CTA
+       ═══════════════════════════════════════════════════════════ */
+    .ctaSection {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      width: 100%;
+      margin: 2rem 0 3rem;
+      padding: clamp(2.5rem,5vw,3.5rem) clamp(1.5rem,3vw,2.5rem);
+      border-radius: var(--r-2xl);
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(145deg, var(--g900) 0%, var(--g800) 100%);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .ctaSection::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 10%, rgba(100,148,62,0.5) 50%, transparent 90%);
+      pointer-events: none;
+    }
+    .ctaSection::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0; height: 50%;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(100,148,62,0.08), transparent);
+      pointer-events: none;
+    }
+    .ctaSection h2 {
+      margin: 0 0 0.75rem;
+      font-family: "Sora", sans-serif;
+      font-size: clamp(1.75rem,3vw,2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      position: relative; z-index: 1;
+    }
+    .ctaSection > p {
+      max-width: 44ch;
+      margin: 0 auto 1.5rem;
+      color: rgba(255,255,255,0.55);
+      font-size: 1rem;
+      line-height: 1.6;
+      position: relative; z-index: 1;
+    }
+    .ctaSection .primaryButton {
+      background: var(--g500);
+      color: #fff;
+      padding: 0.8rem 1.35rem;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 16px rgba(100,148,62,0.35);
+      position: relative; z-index: 1;
+    }
+    .ctaSection .primaryButton::after { display: none; }
+    .ctaSection .primaryButton:hover {
+      background: var(--g400);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(100,148,62,0.45);
+    }
+
+    .supportText {
+      max-width: none;
+      margin: 1.15rem auto 0;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.85rem;
+      position: relative; z-index: 1;
+    }
+    .supportText a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s ease; }
+    .supportText a:hover { color: #fff; text-decoration: underline; }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0 3rem;
+      color: var(--ink-300);
+      font-size: 0.82rem;
+    }
+    .footer a { color: var(--ink-400); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOCUS
+       ═══════════════════════════════════════════════════════════ */
+    .nav a:focus-visible, .loginLink:focus-visible, .installButton:focus-visible,
+    .primaryButton:focus-visible, .secondaryButton:focus-visible, .supportText a:focus-visible {
+      outline: 2px solid var(--g500);
+      outline-offset: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       ANIMATIONS
+       ═══════════════════════════════════════════════════════════ */
+    .anim-fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.55s cubic-bezier(0.22,1,0.36,1);
+    }
+    .anim-fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    .anim-stagger > .anim-fade-up:nth-child(1) { transition-delay: 0s; }
+    .anim-stagger > .anim-fade-up:nth-child(2) { transition-delay: 0.08s; }
+    .anim-stagger > .anim-fade-up:nth-child(3) { transition-delay: 0.16s; }
+    .anim-stagger > .anim-fade-up:nth-child(4) { transition-delay: 0.24s; }
+    .anim-stagger > .anim-fade-up:nth-child(5) { transition-delay: 0.32s; }
+    .anim-stagger > .anim-fade-up:nth-child(6) { transition-delay: 0.40s; }
+    .anim-stagger > .anim-fade-up:nth-child(7) { transition-delay: 0.48s; }
+    .anim-stagger > .anim-fade-up:nth-child(8) { transition-delay: 0.56s; }
+
+    .anim-header {
+      opacity: 0;
+      transform: translateY(-16px);
+      animation: slideDown 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
+      animation-delay: 0.1s;
+    }
+    @keyframes slideDown { to { opacity:1; transform:translateY(0); } }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 1080px) {
+      .header { padding: 0 0.5rem 0 0.85rem; }
+      .nav { display: none; }
+      .heroTitle { max-width: 15ch; }
+      .heroHighlights { grid-template-columns: 1fr; }
+      .previewStack { grid-template-columns: 1fr; }
+      .faqGrid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        height: auto;
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--r-xl);
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .brand { gap: 0; }
+      .brandLogoFull { display: none; }
+      .brandLogoIcon { display: block; }
+      .headerActions { gap: 0.25rem; }
+      .loginLink { padding: 0.35rem 0.6rem; font-size: 0.82rem; }
+      .installButton { height: 2.25rem; padding: 0 0.85rem; font-size: 0.82rem; }
+      .heroShell { padding: 1.25rem; border-radius: var(--r-xl); }
+      .heroPreviewWrap { margin-top: -0.75rem; margin-bottom: -1.5rem; padding: 0 0.75rem; }
+      .badge { align-self: center; }
+      .heroTitle { max-width: none; text-align: center; }
+      .heroActions { flex-direction: column; width: 100%; }
+      .primaryButton, .secondaryButton { width: 100%; justify-content: center; }
+      .keywordTags { justify-content: center; }
+      .previewMetricRow { grid-template-columns: 1fr; }
+      .card { padding: 1.35rem; }
+      .screenshotCardContent { padding: 1.15rem; }
+      .ctaSection { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .faqItem { padding: 1rem; }
+      .cursorGlow { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+      .anim-fade-up { opacity: 1; transform: none; }
+      .anim-header { opacity: 1; transform: none; }
+    }
+
+    /* ── Feature Spotlight ── */
+    .spotlightSection { padding: clamp(4rem,7vw,6rem) 0; }
+    .spotlightGrid { display: flex; flex-direction: column; gap: clamp(3rem,6vw,5rem); }
+    .spotlightRow { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem,4vw,3.5rem); align-items: center; }
+    .spotlightImg { border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .spotlightImg img { width: 100%; height: auto; display: block; }
+    .spotlightText .sectionEyebrow { display: inline-block; margin-bottom: 0.65rem; }
+    .spotlightText h3 { font-size: clamp(1.35rem,2.5vw,1.75rem); font-weight: 700; color: var(--ink-700); letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 0.65rem; }
+    .spotlightText p { color: var(--ink-400); font-size: 0.95rem; line-height: 1.7; }
+    .spotlightRow.reverse .spotlightImg { order: 2; }
+    .spotlightRow.reverse .spotlightText { order: 1; }
+    @media (max-width: 768px) { .spotlightRow { grid-template-columns: 1fr; } .spotlightRow.reverse .spotlightImg { order: 0; } .spotlightRow.reverse .spotlightText { order: 0; } }
+
+    /* Product showcase strip */
+    .showcaseWrap { display: flex; justify-content: center; padding: clamp(1.5rem,3vw,2.5rem) clamp(1.25rem,4vw,2.5rem); }
+    .showcasePreview { position: relative; max-width: 62rem; width: 100%; border-radius: var(--r-2xl); background: var(--g900); border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow-xl); overflow: hidden; }
+    .showcasePreview .termTitleBar { border-radius: var(--r-2xl) var(--r-2xl) 0 0; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="backgroundGlow"></div>
+    <div class="cursorGlow" id="cursorGlow"></div>
+    <div class="container">
+
+      <!-- ════════════ HEADER ════════════ -->
+      <header class="header anim-header">
+        <a class="brand" href="#" aria-label="OpsPilot home">
+          <img src="app/routes/_index/log with sided name.png" alt="OpsPilot" class="brandLogoFull" />
+          <img src="app/routes/_index/logo alone.png" alt="OpsPilot" class="brandLogoIcon" />
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="#major-features">Features</a>
+          <a href="#screenshots">Screenshots</a>
+          <a href="#why-opspilot">Why OpsPilot</a>
+          <a href="#faq">FAQ</a>
+          <a href="#">Privacy</a>
+        </nav>
+
+        <div class="headerActions">
+          <a class="loginLink" href="#">Log in</a>
+          <a class="installButton" href="#">Install App</a>
+        </div>
+      </header>
+
+      <!-- ════════════ HERO ════════════ -->
+      <section class="hero">
+        <div class="heroShell anim-stagger" data-animate>
+          <div class="heroContent">
+            <div class="badge anim-fade-up">
+              <span class="badgeDot"></span>
+              Shopify Automation, Alerts and Task Management
+            </div>
+
+            <h1 class="heroTitle anim-fade-up">
+              Run your Shopify operations with calm,
+              <span class="heroTitleHighlight">green-light clarity</span>
+            </h1>
+
+            <p class="heroText anim-fade-up">
+              OpsPilot helps merchants automate daily operations with workflows,
+              alerts, and task management. Track orders, inventory, abandoned
+              checkouts, and customer activity in one operational command center.
+            </p>
+
+            <div class="heroActions anim-fade-up">
+              <a class="primaryButton" href="#">
+                Install OpsPilot <i data-lucide="arrow-right" style="width:18px;height:18px"></i>
+              </a>
+              <a class="secondaryButton" href="#major-features">Explore features</a>
+            </div>
+
+            <div class="heroHighlights anim-fade-up" aria-label="OpsPilot advantages">
+              <article class="heroHighlight">
+                <span>Always-on monitoring</span>
+                <strong>Orders, stock, payments, and customer flows</strong>
+              </article>
+              <article class="heroHighlight">
+                <span>Flexible automation</span>
+                <strong>Trigger, condition, and action workflows</strong>
+              </article>
+              <article class="heroHighlight">
+                <span>Team execution</span>
+                <strong>Tasks, alerts, and follow-up in one place</strong>
+              </article>
+            </div>
+
+            <ul class="keywordTags anim-fade-up" aria-label="Shopify app store keywords">
+              <li>Shopify automation</li>
+              <li>Workflow automation</li>
+              <li>Order alerts</li>
+              <li>Inventory alerts</li>
+              <li>Task management</li>
+              <li>Operations dashboard</li>
+            </ul>
+          </div>
+
+          <!-- Preview now lives OUTSIDE heroShell, centered below -->
+        </div>
+
+        <div class="heroPreviewWrap anim-stagger" data-animate>
+          <aside class="heroPreview anim-fade-up" aria-label="OpsPilot live operations preview">
+            <div class="termTitleBar">
+              <div class="termDots"><span></span><span></span><span></span></div>
+              <span class="termTitle">opspilot &mdash; live operations</span>
+            </div>
+            <div class="termBody">
+              <div class="previewStack">
+                <div class="previewCard">
+                  <div class="previewCardHeader"><i data-lucide="activity" class="iconAccent" style="width:14px;height:14px"></i> Dashboard</div>
+                  <div class="previewMetricRow">
+                    <div><span>Queue</span><strong><span class="metricNum">6</span></strong></div>
+                    <div><span>Active</span><strong><span class="metricNum">14</span></strong></div>
+                    <div><span>Revenue</span><strong><span class="metricNum">$2.4k</span></strong></div>
+                    <div><span>Tasks</span><strong><span class="metricNum">8</span></strong></div>
+                  </div>
+                  <div class="miniChart">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="previewCard">
+                  <div class="previewCardHeader"><i data-lucide="workflow" class="iconAccent" style="width:14px;height:14px"></i> Workflow</div>
+                  <div class="previewFlow">
+                    <div class="flowStep active"><span class="flowDot"></span><span class="flowLabel">Order received</span></div>
+                    <div class="flowStep active"><span class="flowDot"></span><span class="flowLabel">Check inventory</span></div>
+                    <div class="flowStep"><span class="flowDot"></span><span class="flowLabel">Notify team</span></div>
+                    <div class="flowStep"><span class="flowDot"></span><span class="flowLabel">Update sheet</span></div>
+                  </div>
+                  <div class="previewPills">
+                    <span><i data-lucide="slack" class="pillIcon"></i> Slack</span>
+                    <span><i data-lucide="mail" class="pillIcon"></i> Email</span>
+                  </div>
+                </div>
+                <div class="previewCard">
+                  <div class="previewCardHeader"><i data-lucide="check-square" class="iconAccent" style="width:14px;height:14px"></i> Tasks</div>
+                  <div class="previewFlow">
+                    <div class="flowStep active"><span class="flowDot"></span><span class="flowLabel">VIP order flagged</span></div>
+                    <div class="flowStep active"><span class="flowDot"></span><span class="flowLabel">Low stock alert</span></div>
+                    <div class="flowStep"><span class="flowDot"></span><span class="flowLabel">Checkout follow-up</span></div>
+                    <div class="flowStep"><span class="flowDot"></span><span class="flowLabel">Inventory restock</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div><!-- /heroPreviewWrap -->
+      </section>
+
+      <!-- PRODUCT SHOWCASE -->
+      <div class="showcaseWrap anim-stagger" data-animate>
+        <div class="showcasePreview anim-fade-up">
+          <div class="termTitleBar">
+            <div class="termDots"><span></span><span></span><span></span></div>
+            <span class="termTitle">opspilot &mdash; your store on autopilot</span>
+          </div>
+          <img src="asets/1@2x.png" alt="OpsPilot — Your Store on Autopilot. Under Your Control." loading="eager" decoding="async" style="width:100%;display:block;" />
+        </div>
+      </div>
+
+      <!-- ════════════ FEATURES ════════════ -->
+      <section id="major-features" class="section" style="padding-top: clamp(5rem, 8vw, 7rem);">
+        <div class="sectionHeader anim-stagger" data-animate>
+          <p class="sectionEyebrow anim-fade-up">Core Platform</p>
+          <h2 class="sectionTitle anim-fade-up">Everything you need to run your store</h2>
+          <p class="sectionSubtitle anim-fade-up">Powerful tools designed specifically for Shopify merchants to streamline daily operations.</p>
+        </div>
+
+        <div class="featureGrid anim-stagger" data-animate>
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="activity" style="width:24px;height:24px"></i></div>
+            <h3>Real-Time Operations Dashboard</h3>
+            <p>Get a complete overview of store health and quickly identify issues and opportunities.</p>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> High-value orders</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Abandoned checkouts</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Inventory risks</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Pending payments</li>
+            </ul>
+          </article>
+
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="workflow" style="width:24px;height:24px"></i></div>
+            <h3>Shopify Workflow Automation</h3>
+            <p>Build flexible workflow automation for repetitive operational processes.</p>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Order, customer, product triggers</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Abandoned checkout triggers</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Condition and action logic</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Ready-to-use templates</li>
+            </ul>
+          </article>
+
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="check-square" style="width:24px;height:24px"></i></div>
+            <h3>Automated Task Management</h3>
+            <p>Convert important events into actionable tasks for your team.</p>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Create tasks from events</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Assign ownership</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Kanban or table views</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Custom statuses and notes</li>
+            </ul>
+          </article>
+
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="bell" style="width:24px;height:24px"></i></div>
+            <h3>Alerts and Notifications</h3>
+            <p>Stay informed when important events occur in your Shopify store.</p>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Email notifications</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Slack messages</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Google Sheets logging</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Activity history</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- ════════════ SCREENSHOTS ════════════ -->
+      <section id="screenshots" class="section">
+        <div class="sectionHeader anim-stagger" data-animate>
+          <p class="sectionEyebrow anim-fade-up">Product Surfaces</p>
+          <h2 class="sectionTitle anim-fade-up">See OpsPilot in Action</h2>
+          <p class="sectionSubtitle anim-fade-up">A clean, intuitive interface designed for speed and clarity.</p>
+        </div>
+
+        <div class="screenshotGrid anim-stagger" data-animate>
+          <article class="screenshotCard anim-fade-up">
+            <img src="asets/2@2x.png" alt="OpsPilot Real-Time Operational Health Dashboard" loading="lazy" decoding="async" style="width:100%;display:block;" />
+            <div class="screenshotCardContent">
+              <h4>Real-Time Operational Health</h4>
+              <p>Prioritize risks and monitor store activity at a glance. Catch critical issues before they cost you.</p>
+            </div>
+          </article>
+
+          <article class="screenshotCard anim-fade-up">
+            <img src="asets/3@2x.png" alt="OpsPilot Automation Engine" loading="lazy" decoding="async" style="width:100%;display:block;" />
+            <div class="screenshotCardContent">
+              <h4>The Automation Engine</h4>
+              <p>Build powerful, logic-based workflows that run 24/7 with 35+ predefined templates and reliable background operations.</p>
+            </div>
+          </article>
+
+          <article class="screenshotCard anim-fade-up">
+            <img src="asets/7@2x.png" alt="OpsPilot Turn Alerts into Action — Kanban" loading="lazy" decoding="async" style="width:100%;display:block;" />
+            <div class="screenshotCardContent">
+              <h4>Turn Alerts into Action</h4>
+              <p>A built-in Kanban workspace for your team's daily operations with automatic card creation and one-click resolution.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ════════════ FEATURE SPOTLIGHT ════════════ -->
+      <section class="spotlightSection">
+        <div class="sectionHeader anim-stagger" data-animate>
+          <p class="sectionEyebrow anim-fade-up">Platform Deep Dive</p>
+          <h2 class="sectionTitle anim-fade-up">Everything Connected, Nothing Missed</h2>
+          <p class="sectionSubtitle anim-fade-up">From integrations to branding to intelligent automation — OpsPilot covers every layer.</p>
+        </div>
+        <div class="spotlightGrid">
+          <div class="spotlightRow anim-fade-up" data-animate>
+            <div class="spotlightImg"><img src="asets/4@2x.png" alt="Stay Informed, Everywhere — Slack, Email, Google Sheets" loading="lazy" decoding="async" /></div>
+            <div class="spotlightText">
+              <p class="sectionEyebrow">Integrations</p>
+              <h3>Stay Informed, Everywhere.</h3>
+              <p>Connect your store to Slack, Google Sheets, and Email. Get instant team alerts anywhere, automated historical data logs, and professionally branded notifications delivered on cue.</p>
+            </div>
+          </div>
+          <div class="spotlightRow reverse anim-fade-up" data-animate>
+            <div class="spotlightImg"><img src="asets/5@2x.png" alt="Tailored to Your Brand — White-label tools" loading="lazy" decoding="async" /></div>
+            <div class="spotlightText">
+              <p class="sectionEyebrow">White-Label</p>
+              <h3>Tailored to Your Brand.</h3>
+              <p>Advanced governance and white-label tools for high-volume stores. Custom Slack and Sheet branding, personalized sender emails, DNS verification, and 100% email delivery reached.</p>
+            </div>
+          </div>
+          <div class="spotlightRow anim-fade-up" data-animate>
+            <div class="spotlightImg"><img src="asets/6@2x.png" alt="Turn Store Data into Action — Use cases" loading="lazy" decoding="async" /></div>
+            <div class="spotlightText">
+              <p class="sectionEyebrow">Use Cases</p>
+              <h3>Turn Store Data into Action.</h3>
+              <p>Automatically alert staff on unfulfilled orders, flag high-risk orders before shipping, and auto-tag VIP customers to trigger personalized follow-up — all without manual effort.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ WHY OPSPILOT ════════════ -->
+      <section id="why-opspilot" class="section">
+        <div class="sectionHeader anim-stagger" data-animate>
+          <p class="sectionEyebrow anim-fade-up">Why Teams Choose It</p>
+          <h2 class="sectionTitle anim-fade-up">Built for operators, not just dashboards</h2>
+          <p class="sectionSubtitle anim-fade-up">OpsPilot keeps monitoring, automation, and follow-up connected so nothing important slips through.</p>
+        </div>
+
+        <div class="split anim-stagger" data-animate>
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="users" style="width:24px;height:24px"></i></div>
+            <h3>Team Collaboration</h3>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Task assignments and ownership</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Notes and attachments</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Activity logs</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Role-based admin settings</li>
+            </ul>
+          </article>
+
+          <article class="card anim-fade-up">
+            <div class="cardIcon"><i data-lucide="zap" style="width:24px;height:24px"></i></div>
+            <h3>Integrations and Templates</h3>
+            <ul class="cardList">
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Slack notifications</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Google Sheets automation</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Email alerts</li>
+              <li><i data-lucide="check-circle-2" class="checkIcon"></i> Ready-to-use workflow templates</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- ════════════ FAQ ════════════ -->
+      <section id="faq" class="section">
+        <div class="sectionHeader anim-stagger" data-animate>
+          <p class="sectionEyebrow anim-fade-up">Common Questions</p>
+          <h2 class="sectionTitle anim-fade-up">FAQ</h2>
+          <p class="sectionSubtitle anim-fade-up">Quick answers for merchants evaluating OpsPilot for daily store operations and workflow automation.</p>
+        </div>
+
+        <div class="faqGrid anim-stagger" data-animate>
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>What does OpsPilot automate?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">OpsPilot automates operational follow-up across orders, customers, products, inventory, abandoned checkouts, and scheduled review workflows.</p>
+          </details>
+
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>Do I need technical knowledge to build workflows?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">No. You can start from templates or use the visual builder to configure triggers, conditions, and actions without writing code.</p>
+          </details>
+
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>Can OpsPilot alert my team outside Shopify?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">Yes. OpsPilot supports Slack alerts, workflow emails, and Google Sheets logging so teams can stay aligned across tools.</p>
+          </details>
+
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>Is OpsPilot useful for teams, not just solo merchants?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">Yes. It includes task assignment, notes, activity history, and shared workflow-driven follow-up so multiple operators can work from one system.</p>
+          </details>
+
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>Can I test workflows before relying on them?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">Yes. The app includes test actions such as running scheduled workflows manually or testing with the latest order, product, customer, checkout, or inventory payload.</p>
+          </details>
+
+          <details class="faqItem anim-fade-up">
+            <summary class="faqQuestion">
+              <span>Can I start with templates and customize later?</span>
+              <span class="faqMarker" aria-hidden="true">+</span>
+            </summary>
+            <p class="faqAnswer">Yes. You can use built-in templates as a starting point, then adjust the trigger, conditions, actions, integrations, and activation status at any time.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- ════════════ CTA ════════════ -->
+      <section class="ctaSection anim-stagger" data-animate>
+        <h2 class="anim-fade-up">Ready to automate your store?</h2>
+        <p class="anim-fade-up">Join merchants who use OpsPilot to automate operations, reduce errors, and save hours every week.</p>
+        <a class="primaryButton anim-fade-up" href="#">
+          Start with OpsPilot <i data-lucide="arrow-right" style="width:18px;height:18px"></i>
+        </a>
+        <p class="supportText anim-fade-up">
+          Questions? Contact us at <a href="mailto:support@opspilotflow.com">support@opspilotflow.com</a>
+          &nbsp;&middot;&nbsp; <a href="#">Privacy Policy</a>
+        </p>
+        <img src="asets/8@2x.png" alt="Install OpsPilot on Shopify — Available now on the Shopify App Store" loading="lazy" decoding="async" class="anim-fade-up" style="max-width:38rem;width:90%;margin:2.5rem auto 0;display:block;border-radius:var(--r-xl);opacity:0.9;" />
+      </section>
+
+      <footer class="footer">
+        <p>&copy; 2025 OpsPilot &nbsp;&middot;&nbsp; Built for Shopify merchants &nbsp;&middot;&nbsp; <a href="mailto:support@opspilotflow.com">support@opspilotflow.com</a></p>
+      </footer>
+
+    </div>
+  </main>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       1. Initialise Lucide icons
+       ═══════════════════════════════════════════════════════════ */
+    lucide.createIcons();
+
+    /* ═══════════════════════════════════════════════════════════
+       2. Cursor Glow — follows mouse, subtle ambient light
+       ═══════════════════════════════════════════════════════════ */
+    (function () {
+      var glow = document.getElementById("cursorGlow");
+      if (!glow || window.innerWidth < 768) return;
+
+      var rAF = null;
+      document.addEventListener("mousemove", function (e) {
+        if (rAF) return;
+        rAF = requestAnimationFrame(function () {
+          glow.style.left = e.clientX + "px";
+          glow.style.top = e.clientY + "px";
+          if (!glow.classList.contains("active")) glow.classList.add("active");
+          rAF = null;
+        });
+      });
+
+      document.addEventListener("mouseleave", function () {
+        glow.classList.remove("active");
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════════════
+       3. Count-up animation for metric numbers
+       ═══════════════════════════════════════════════════════════ */
+    (function () {
+      var counters = document.querySelectorAll(".metricNum[data-count]");
+      if (!counters.length) return;
+
+      function animateCount(el) {
+        var target = parseInt(el.getAttribute("data-count"), 10);
+        if (isNaN(target)) return;
+        var duration = 1200;
+        var start = null;
+        function tick(ts) {
+          if (!start) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+          el.textContent = Math.round(eased * target);
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      if ("IntersectionObserver" in window) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              animateCount(entry.target);
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        counters.forEach(function (c) { obs.observe(c); });
+      } else {
+        counters.forEach(animateCount);
+      }
+    })();
+
+    /* ═══════════════════════════════════════════════════════════
+       4. Magnetic hover effect on buttons
+       ═══════════════════════════════════════════════════════════ */
+    (function () {
+      if (window.innerWidth < 768) return;
+      var buttons = document.querySelectorAll(".primaryButton, .installButton");
+      buttons.forEach(function (btn) {
+        btn.addEventListener("mousemove", function (e) {
+          var rect = btn.getBoundingClientRect();
+          var x = e.clientX - rect.left - rect.width / 2;
+          var y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = "translate(" + x * 0.15 + "px, " + y * 0.15 + "px)";
+        });
+        btn.addEventListener("mouseleave", function () {
+          btn.style.transform = "";
+        });
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════════════
+       5. Scroll-triggered animations (replaces Framer Motion)
+       ═══════════════════════════════════════════════════════════ */
+    (function () {
+      var containers = document.querySelectorAll("[data-animate]");
+
+      if (!("IntersectionObserver" in window)) {
+        document.querySelectorAll(".anim-fade-up").forEach(function (el) {
+          el.classList.add("visible");
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target
+                .querySelectorAll(".anim-fade-up")
+                .forEach(function (child) {
+                  child.classList.add("visible");
+                });
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "-10% 0px" }
+      );
+
+      containers.forEach(function (c) {
+        observer.observe(c);
+      });
+
+      // Hero: animate immediately on load
+      var heroShell = document.querySelector(".heroShell");
+      if (heroShell) {
+        setTimeout(function () {
+          heroShell.querySelectorAll(".anim-fade-up").forEach(function (el) {
+            el.classList.add("visible");
+          });
+        }, 150);
+      }
+    })();
+
+    /* ═══════════════════════════════════════════════════════════
+       6. Smooth scroll for anchor links
+       ═══════════════════════════════════════════════════════════ */
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener("click", function (e) {
+        var target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
