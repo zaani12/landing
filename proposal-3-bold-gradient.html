@@ -69,6 +69,187 @@
       content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, rgba(100,148,62,0.5), transparent);
     }
+
+    /* ── HERO BACKGROUND EFFECTS (dark theme) ── */
+    .heroBg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+    /* Hero blueprint grid */
+    .heroBg .hGrid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(100,148,62,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,148,62,0.08) 1px, transparent 1px);
+      background-size: 55px 55px;
+      mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    /* Hero workflow nodes */
+    .heroBg .hNode {
+      position: absolute;
+      border-radius: 10px;
+      border: 1px solid rgba(100,148,62,0.2);
+      background: rgba(100,148,62,0.04);
+      backdrop-filter: blur(4px);
+      transition: transform 0.6s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+    }
+    .heroBg .hNode::before {
+      content: '';
+      position: absolute; top: 50%; left: -12px; transform: translateY(-50%);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 10px rgba(100,148,62,0.6);
+    }
+    .heroBg .hNode::after {
+      content: '';
+      position: absolute; top: 50%; right: -12px; transform: translateY(-50%);
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--g300);
+      box-shadow: 0 0 8px rgba(150,190,116,0.5);
+    }
+    .heroBg .hNode .hl {
+      position: absolute; left: 10px; right: 10px;
+      height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, rgba(100,148,62,0.25), rgba(100,148,62,0.08));
+    }
+    .heroBg .hNode .hl:first-child { top: 10px; }
+    .heroBg .hNode .hl:nth-child(2) { top: 18px; width: 55%; }
+    .heroBg .hNode .hLed {
+      position: absolute; top: 8px; right: 8px;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px rgba(74,222,128,0.7);
+      animation: statusBlink 3s ease-in-out infinite;
+    }
+    .heroBg .hNode:nth-child(2) { width: 110px; height: 42px; top: 12%; left: 6%; opacity: 0.7; }
+    .heroBg .hNode:nth-child(3) { width: 90px; height: 36px; top: 22%; right: 8%; opacity: 0.6; }
+    .heroBg .hNode:nth-child(4) { width: 120px; height: 44px; bottom: 22%; left: 4%; opacity: 0.6; }
+    .heroBg .hNode:nth-child(5) { width: 100px; height: 38px; bottom: 14%; right: 6%; opacity: 0.65; }
+    .heroBg .hNode:nth-child(6) { width: 80px; height: 34px; top: 48%; left: 2%; opacity: 0.55; }
+    .heroBg .hNode:nth-child(7) { width: 95px; height: 38px; top: 42%; right: 3%; opacity: 0.5; }
+
+    /* Hero pipeline connectors */
+    .heroBg .hPipe {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(100,148,62,0.25), rgba(150,190,116,0.15), transparent);
+      transition: transform 0.8s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+      opacity: 0.5;
+    }
+    .heroBg .hPipe::before {
+      content: '';
+      position: absolute; top: -4px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 12px rgba(100,148,62,0.8), 0 0 4px rgba(100,148,62,0.9);
+      animation: dotTravel 4.5s linear infinite;
+    }
+    .heroBg .hPipe::after {
+      content: ''; position: absolute; inset: 0;
+      background: inherit; filter: blur(4px); opacity: 0.5;
+    }
+    .heroBg .hPipe:nth-child(8)  { top: 30%; left: 8%;  width: 200px; transform: rotate(8deg); }
+    .heroBg .hPipe:nth-child(9)  { top: 60%; right: 6%; width: 240px; transform: rotate(-5deg); }
+    .heroBg .hPipe:nth-child(10) { top: 45%; left: 3%;  width: 180px; transform: rotate(3deg); }
+    .heroBg .hPipe:nth-child(9)::before { animation-duration: 5.5s; }
+    .heroBg .hPipe:nth-child(10)::before { animation-duration: 3.8s; }
+
+    /* Hero automation badges */
+    .heroBg .hBadge {
+      position: absolute;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(100,148,62,0.08);
+      border: 1px solid rgba(100,148,62,0.2);
+      backdrop-filter: blur(4px);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: rgba(100,148,62,0.5);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: transform 0.5s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+      opacity: 0.7;
+    }
+    .heroBg .hBadge::before {
+      content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      margin-right: 5px; vertical-align: middle;
+    }
+    .heroBg .hBadge:nth-child(11) { top: 18%; right: 5%; }
+    .heroBg .hBadge:nth-child(11)::before { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.7); }
+    .heroBg .hBadge:nth-child(12) { bottom: 25%; left: 3%; }
+    .heroBg .hBadge:nth-child(12)::before { background: var(--g400); box-shadow: 0 0 6px rgba(100,148,62,0.6); }
+    .heroBg .hBadge:nth-child(13) { top: 35%; left: 1.5%; }
+    .heroBg .hBadge:nth-child(13)::before { background: #facc15; box-shadow: 0 0 6px rgba(250,204,21,0.6); }
+
+    /* Hero glow orbs */
+    .heroBg .hOrb {
+      position: absolute; border-radius: 50%;
+      filter: blur(70px);
+      transition: transform 1.2s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+    }
+    .heroBg .hOrb:nth-child(14) { width: 300px; height: 300px; top: -10%; left: -5%; background: rgba(100,148,62,0.08); }
+    .heroBg .hOrb:nth-child(15) { width: 250px; height: 250px; bottom: -8%; right: -3%; background: rgba(100,148,62,0.06); }
+
+    /* Hero data-flow dots */
+    .heroBg .hDot {
+      position: absolute;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 8px rgba(100,148,62,0.6), 0 0 16px rgba(100,148,62,0.2);
+      transition: transform 0.35s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+      opacity: 0.8;
+    }
+    .heroBg .hDot:nth-child(even) { background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.6); }
+    .heroBg .hDot:nth-child(16) { top: 15%; left: 20%; }
+    .heroBg .hDot:nth-child(17) { top: 35%; right: 15%; width: 4px; height: 4px; }
+    .heroBg .hDot:nth-child(18) { bottom: 30%; left: 12%; width: 6px; height: 6px; }
+    .heroBg .hDot:nth-child(19) { bottom: 18%; right: 20%; }
+    .heroBg .hDot:nth-child(20) { top: 55%; left: 45%; width: 7px; height: 7px; box-shadow: 0 0 12px rgba(100,148,62,0.7); }
+
+    /* Hero gear rings */
+    .heroBg .hGear {
+      position: absolute; border-radius: 50%;
+      border: 1.5px dashed rgba(100,148,62,0.14);
+      transition: transform 0.9s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+    }
+    .heroBg .hGear::after {
+      content: ''; position: absolute; inset: 7px;
+      border-radius: 50%;
+      border: 1px dashed rgba(100,148,62,0.08);
+    }
+    .heroBg .hGear:nth-child(21) { width: 65px; height: 65px; top: 10%; right: 15%; opacity: 0.3; }
+    .heroBg .hGear:nth-child(22) { width: 90px; height: 90px; bottom: 15%; left: 8%; opacity: 0.22; }
+
+    /* Hero flow arrows */
+    .heroBg .hArrow {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 10px solid rgba(100,148,62,0.15);
+      transition: transform 0.6s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+    }
+    .heroBg .hArrow:nth-child(23) { top: 25%; left: 15%; transform: rotate(-20deg); opacity: 0.4; }
+    .heroBg .hArrow:nth-child(24) { bottom: 20%; right: 12%; transform: rotate(35deg); opacity: 0.35; border-bottom-color: rgba(150,190,116,0.15); }
+    .heroBg .hArrow:nth-child(25) { top: 55%; right: 8%; transform: rotate(10deg); opacity: 0.3; }
+
+    /* Hero flow streak lines */
+    .heroBg .hStreak {
+      position: absolute; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100,148,62,0.15), transparent);
+      transition: transform 1s cubic-bezier(.23,1,.32,1);
+      will-change: transform;
+    }
+    .heroBg .hStreak:nth-child(26) { top: 33%; left: 0; width: 100%; opacity: 0.3; }
+    .heroBg .hStreak:nth-child(27) { top: 66%; left: 0; width: 100%; opacity: 0.2; }
     .heroInner { position: relative; z-index: 1; text-align: center; }
     .heroBadge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 1rem; border-radius: var(--r-full); background: rgba(100,148,62,0.12); border: 1px solid rgba(100,148,62,0.25); color: var(--g300); font-size: 0.78rem; font-weight: 600; margin-bottom: 1.5rem; }
     .heroBadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--g400); box-shadow: 0 0 8px var(--g500); animation: pulse 2.5s ease-in-out infinite; }
@@ -197,6 +378,264 @@
     .anim.visible { opacity: 1; transform: translateY(0); }
     .stagger > .anim:nth-child(2){transition-delay:.08s} .stagger > .anim:nth-child(3){transition-delay:.16s} .stagger > .anim:nth-child(4){transition-delay:.24s} .stagger > .anim:nth-child(5){transition-delay:.32s} .stagger > .anim:nth-child(6){transition-delay:.4s} .stagger > .anim:nth-child(7){transition-delay:.48s} .stagger > .anim:nth-child(8){transition-delay:.56s}
 
+    /* ── IMMERSIVE BACKGROUND EFFECTS ── */
+    .bgCanvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .header, .hero, .heroPreviewWrap, .container, .cta, .footer { position: relative; z-index: 1; }
+
+    /* Grid overlay — bold crosshatch */
+    .bgGrid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(100,148,62,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,148,62,0.07) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 75%);
+    }
+    /* Diagonal accent grid */
+    .bgGrid::after {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(100,148,62,0.04) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(100,148,62,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+    }
+
+    /* ── Glassmorphism workflow nodes ── */
+    .bgNode {
+      position: absolute;
+      border-radius: 12px;
+      border: 1.5px solid rgba(100,148,62,0.22);
+      background: linear-gradient(135deg, rgba(100,148,62,0.06), rgba(255,255,255,0.04));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(100,148,62,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgNode::before {
+      content: '';
+      position: absolute; top: 50%; left: -20px; transform: translateY(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 12px rgba(100,148,62,0.5), 0 0 4px rgba(100,148,62,0.8);
+    }
+    .bgNode::after {
+      content: '';
+      position: absolute; top: 50%; right: -20px; transform: translateY(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--g300);
+      box-shadow: 0 0 10px rgba(100,148,62,0.4);
+    }
+    .bgNode:nth-child(1) { width: 140px; height: 56px; top: 10%; left: 4%; opacity: 0.7; }
+    .bgNode:nth-child(2) { width: 110px; height: 44px; top: 26%; right: 6%; opacity: 0.65; }
+    .bgNode:nth-child(3) { width: 160px; height: 60px; top: 52%; left: 2%; opacity: 0.6; }
+    .bgNode:nth-child(4) { width: 120px; height: 50px; top: 70%; right: 4%; opacity: 0.65; }
+    .bgNode:nth-child(5) { width: 130px; height: 52px; top: 38%; left: 6%; opacity: 0.7; }
+    .bgNode:nth-child(6) { width: 100px; height: 42px; top: 86%; left: 10%; opacity: 0.55; }
+
+    /* Inner node content — bolder mock UI */
+    .bgNode .nodeLine {
+      position: absolute; left: 14px; right: 14px;
+      height: 5px; border-radius: 3px;
+      background: linear-gradient(90deg, rgba(100,148,62,0.3), rgba(100,148,62,0.1));
+    }
+    .bgNode .nodeLine:nth-child(1) { top: 14px; }
+    .bgNode .nodeLine:nth-child(2) { top: 26px; width: 55%; background: linear-gradient(90deg, rgba(100,148,62,0.2), rgba(100,148,62,0.05)); }
+
+    /* Status dot on nodes */
+    .bgNode .nodeStatus {
+      position: absolute; top: 10px; right: 12px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px rgba(74,222,128,0.6);
+      animation: statusBlink 3s ease-in-out infinite;
+    }
+    .bgNode:nth-child(odd) .nodeStatus { background: var(--g400); box-shadow: 0 0 6px rgba(100,148,62,0.6); }
+    .bgNode:nth-child(even) .nodeStatus { background: #facc15; box-shadow: 0 0 6px rgba(250,204,21,0.5); animation-delay: -1.5s; }
+    @keyframes statusBlink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Animated connection lines ── */
+    .bgConnector {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--g400) 20%, var(--g300) 50%, var(--g400) 80%, transparent 100%);
+      transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+      opacity: 0.35;
+    }
+    .bgConnector::before {
+      content: '';
+      position: absolute; top: -4px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 14px rgba(100,148,62,0.7), 0 0 4px rgba(100,148,62,0.9);
+      animation: dotTravel 4s linear infinite;
+    }
+    .bgConnector::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: inherit;
+      filter: blur(4px);
+      opacity: 0.5;
+    }
+    .bgConnector:nth-child(7)  { top: 18%; left: 10%; width: 240px; transform: rotate(12deg); }
+    .bgConnector:nth-child(8)  { top: 42%; right: 8%;  width: 300px; transform: rotate(-6deg); animation-delay: -1s; }
+    .bgConnector:nth-child(9)  { top: 62%; left: 5%;   width: 220px; transform: rotate(4deg); animation-delay: -2s; }
+    .bgConnector:nth-child(10) { top: 33%; left: 15%;  width: 340px; transform: rotate(-2deg); animation-delay: -0.5s; }
+    .bgConnector:nth-child(8)::before { animation-duration: 5s; }
+    .bgConnector:nth-child(9)::before { animation-duration: 3.5s; }
+    .bgConnector:nth-child(10)::before { animation-duration: 6s; }
+
+    @keyframes dotTravel {
+      0% { left: -5px; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { left: calc(100% - 5px); opacity: 0; }
+    }
+
+    /* ── Floating metric badges — glass style ── */
+    .bgMetric {
+      position: absolute;
+      padding: 8px 16px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(100,148,62,0.1), rgba(255,255,255,0.03));
+      border: 1px solid rgba(100,148,62,0.2);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 2px 12px rgba(100,148,62,0.1);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: rgba(100,148,62,0.45);
+      letter-spacing: 0.1em;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+      opacity: 0.7;
+    }
+    .bgMetric::before {
+      content: '';
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      margin-right: 6px; vertical-align: middle;
+    }
+    .bgMetric:nth-child(11) { top: 16%; right: 3%; }
+    .bgMetric:nth-child(11)::before { background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.6); }
+    .bgMetric:nth-child(12) { top: 58%; left: 1.5%; }
+    .bgMetric:nth-child(12)::before { background: var(--g400); box-shadow: 0 0 8px rgba(100,148,62,0.6); }
+    .bgMetric:nth-child(13) { top: 80%; right: 5%; }
+    .bgMetric:nth-child(13)::before { background: #facc15; box-shadow: 0 0 8px rgba(250,204,21,0.5); }
+    .bgMetric:nth-child(14) { top: 43%; right: 2%; }
+    .bgMetric:nth-child(14)::before { background: #38bdf8; box-shadow: 0 0 8px rgba(56,189,248,0.5); }
+
+    /* ── Bold glowing orbs ── */
+    .bgOrb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgOrb:nth-child(15) { width: 400px; height: 400px; top: 5%; left: -8%; background: rgba(100,148,62,0.1); }
+    .bgOrb:nth-child(16) { width: 350px; height: 350px; top: 45%; right: -5%; background: rgba(74,222,128,0.06); }
+    .bgOrb:nth-child(17) { width: 280px; height: 280px; top: 72%; left: 8%; background: rgba(100,148,62,0.08); }
+
+    /* ── Data-flow dots — neon glow ── */
+    .bgDot {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--g400);
+      box-shadow: 0 0 10px rgba(100,148,62,0.6), 0 0 20px rgba(100,148,62,0.2);
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+      opacity: 0.8;
+    }
+    .bgDot:nth-child(even) { background: #4ade80; box-shadow: 0 0 10px rgba(74,222,128,0.6), 0 0 20px rgba(74,222,128,0.2); }
+    .bgDot:nth-child(18) { top: 13%; left: 18%; }
+    .bgDot:nth-child(19) { top: 28%; left: 72%; width: 5px; height: 5px; }
+    .bgDot:nth-child(20) { top: 53%; left: 38%; width: 7px; height: 7px; }
+    .bgDot:nth-child(21) { top: 68%; left: 82%; }
+    .bgDot:nth-child(22) { top: 83%; left: 14%; width: 5px; height: 5px; }
+    .bgDot:nth-child(23) { top: 40%; left: 56%; width: 8px; height: 8px; box-shadow: 0 0 14px rgba(100,148,62,0.7), 0 0 28px rgba(100,148,62,0.25); }
+
+    /* ── Mini floating chart bars — vivid ── */
+    .bgChart {
+      position: absolute;
+      display: flex; align-items: flex-end; gap: 4px;
+      opacity: 0.3;
+      transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgChart span {
+      width: 8px; border-radius: 3px 3px 0 0;
+    }
+    .bgChart span:nth-child(odd) { background: linear-gradient(to top, var(--g500), var(--g300)); }
+    .bgChart span:nth-child(even) { background: linear-gradient(to top, rgba(74,222,128,0.4), rgba(74,222,128,0.15)); }
+    .bgChart:nth-child(24) { top: 23%; right: 5%; }
+    .bgChart:nth-child(24) span:nth-child(1) { height: 14px; } .bgChart:nth-child(24) span:nth-child(2) { height: 24px; } .bgChart:nth-child(24) span:nth-child(3) { height: 18px; } .bgChart:nth-child(24) span:nth-child(4) { height: 30px; } .bgChart:nth-child(24) span:nth-child(5) { height: 22px; }
+    .bgChart:nth-child(25) { top: 76%; left: 4%; }
+    .bgChart:nth-child(25) span:nth-child(1) { height: 22px; } .bgChart:nth-child(25) span:nth-child(2) { height: 12px; } .bgChart:nth-child(25) span:nth-child(3) { height: 28px; } .bgChart:nth-child(25) span:nth-child(4) { height: 16px; }
+
+    /* ── Floating ring accents ── */
+    .bgRing {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(100,148,62,0.15);
+      transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgRing::after {
+      content: ''; position: absolute; inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,148,62,0.08);
+    }
+    .bgRing:nth-child(26) { width: 80px; height: 80px; top: 20%; right: 12%; opacity: 0.35; }
+    .bgRing:nth-child(27) { width: 120px; height: 120px; top: 65%; left: 8%; opacity: 0.25; }
+    .bgRing:nth-child(28) { width: 60px; height: 60px; top: 48%; right: 4%; opacity: 0.3; border-color: rgba(74,222,128,0.15); }
+
+    /* ── Gradient streak lines ── */
+    .bgStreak {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--g400), transparent);
+      opacity: 0.12;
+      transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgStreak:nth-child(29) { top: 30%; left: 0; width: 100%; }
+    .bgStreak:nth-child(30) { top: 55%; left: 0; width: 100%; opacity: 0.08; }
+    .bgStreak:nth-child(31) { top: 78%; left: 0; width: 100%; opacity: 0.06; }
+
+    /* ── Automation gear rings (dashed cogs) ── */
+    .bgGear {
+      position: absolute; border-radius: 50%;
+      border: 2px dashed rgba(100,148,62,0.14);
+      transition: transform 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgGear::after {
+      content: ''; position: absolute; inset: 8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(74,222,128,0.08);
+    }
+    .bgGear:nth-child(32) { width: 75px; height: 75px; top: 15%; right: 11%; opacity: 0.3; }
+    .bgGear:nth-child(33) { width: 110px; height: 110px; top: 60%; left: 7%; opacity: 0.22; }
+    .bgGear:nth-child(34) { width: 55px; height: 55px; top: 44%; right: 5%; opacity: 0.28; border-color: rgba(250,204,21,0.12); }
+
+    /* ── Flow direction arrows ── */
+    .bgArrow {
+      position: absolute;
+      width: 0; height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 12px solid rgba(100,148,62,0.12);
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+    }
+    .bgArrow:nth-child(35) { top: 22%; left: 24%; transform: rotate(-25deg); opacity: 0.35; }
+    .bgArrow:nth-child(36) { top: 53%; right: 14%; transform: rotate(40deg); opacity: 0.3; border-bottom-color: rgba(74,222,128,0.12); }
+    .bgArrow:nth-child(37) { top: 74%; left: 38%; transform: rotate(12deg); opacity: 0.25; }
+
     @media (max-width: 1024px) { .nav { display: none; } .previewBody { grid-template-columns: 1fr; } .faqGrid { grid-template-columns: 1fr; } }
     @media (max-width: 768px) { .heroTitle { max-width: none; } .heroActions { flex-direction: column; align-items: center; } .heroPreviewWrap { margin-top: 2rem; } .previewBody { grid-template-columns: 1fr; } .previewPane { border-right: none; border-bottom: 1px solid var(--line); } .previewPane:last-child { border-bottom: none; } }
 
@@ -216,6 +655,58 @@
 </head>
 <body>
 
+  <!-- IMMERSIVE BACKGROUND — workflow/dashboard themed -->
+  <div class="bgCanvas" aria-hidden="true">
+    <div class="bgGrid"></div>
+    <!-- Glassmorphism workflow nodes -->
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <div class="bgNode"><span class="nodeLine"></span><span class="nodeLine"></span><span class="nodeStatus"></span></div>
+    <!-- Neon connection lines -->
+    <div class="bgConnector"></div>
+    <div class="bgConnector"></div>
+    <div class="bgConnector"></div>
+    <div class="bgConnector"></div>
+    <!-- Automation status badges -->
+    <div class="bgMetric">WORKFLOW: ON</div>
+    <div class="bgMetric">AUTO-SYNC</div>
+    <div class="bgMetric">3 TRIGGERS</div>
+    <div class="bgMetric">PIPELINE OK</div>
+    <!-- Bold glowing orbs -->
+    <div class="bgOrb"></div>
+    <div class="bgOrb"></div>
+    <div class="bgOrb"></div>
+    <!-- Neon data-flow dots -->
+    <div class="bgDot"></div>
+    <div class="bgDot"></div>
+    <div class="bgDot"></div>
+    <div class="bgDot"></div>
+    <div class="bgDot"></div>
+    <div class="bgDot"></div>
+    <!-- Vivid mini charts -->
+    <div class="bgChart"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="bgChart"><span></span><span></span><span></span><span></span></div>
+    <!-- Ring accents -->
+    <div class="bgRing"></div>
+    <div class="bgRing"></div>
+    <div class="bgRing"></div>
+    <!-- Gradient streaks -->
+    <div class="bgStreak"></div>
+    <div class="bgStreak"></div>
+    <div class="bgStreak"></div>
+    <!-- Automation gear rings -->
+    <div class="bgGear"></div>
+    <div class="bgGear"></div>
+    <div class="bgGear"></div>
+    <!-- Flow direction arrows -->
+    <div class="bgArrow"></div>
+    <div class="bgArrow"></div>
+    <div class="bgArrow"></div>
+  </div>
+
   <header class="header">
     <div class="headerInner">
       <a class="brand" href="#">Ops<span>Pilot</span></a>
@@ -234,6 +725,44 @@
 
   <!-- HERO — dark gradient full-width -->
   <section class="hero">
+    <!-- Hero background effects -->
+    <div class="heroBg" aria-hidden="true">
+      <div class="hGrid"></div>
+      <!-- Workflow nodes -->
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <div class="hNode"><span class="hl"></span><span class="hl"></span><span class="hLed"></span></div>
+      <!-- Pipeline connectors -->
+      <div class="hPipe"></div>
+      <div class="hPipe"></div>
+      <div class="hPipe"></div>
+      <!-- Automation badges -->
+      <div class="hBadge">AUTO-RUN</div>
+      <div class="hBadge">6 WORKFLOWS</div>
+      <div class="hBadge">TRIGGER: ON</div>
+      <!-- Glow orbs -->
+      <div class="hOrb"></div>
+      <div class="hOrb"></div>
+      <!-- Data-flow dots -->
+      <div class="hDot"></div>
+      <div class="hDot"></div>
+      <div class="hDot"></div>
+      <div class="hDot"></div>
+      <div class="hDot"></div>
+      <!-- Gear rings -->
+      <div class="hGear"></div>
+      <div class="hGear"></div>
+      <!-- Flow arrows -->
+      <div class="hArrow"></div>
+      <div class="hArrow"></div>
+      <div class="hArrow"></div>
+      <!-- Flow streaks -->
+      <div class="hStreak"></div>
+      <div class="hStreak"></div>
+    </div>
     <div class="container">
       <div class="heroInner">
         <div class="heroBadge">Shopify Automation &amp; Task Management</div>
@@ -454,6 +983,80 @@
       document.querySelectorAll("[data-anim]").forEach(function(e){obs.observe(e)});
     })();
     document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener("click",function(e){var t=document.querySelector(this.getAttribute("href"));if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth"});}});});
+
+    /* ── Mouse-following parallax for background elements ── */
+    (function(){
+      var canvas = document.querySelector('.bgCanvas');
+      if (!canvas) return;
+
+      // Each layer: selector, speed multiplier (higher = more movement), invert (opposite direction)
+      var layers = [
+        { sel: '.bgNode',      speed: 30,  invert: false },
+        { sel: '.bgConnector', speed: 18,  invert: true  },
+        { sel: '.bgMetric',    speed: 40,  invert: false },
+        { sel: '.bgOrb',       speed: 45,  invert: true  },
+        { sel: '.bgDot',       speed: 55,  invert: false },
+        { sel: '.bgChart',     speed: 25,  invert: true  },
+        { sel: '.bgGrid',      speed: 10,  invert: false },
+        { sel: '.bgRing',      speed: 35,  invert: true  },
+        { sel: '.bgStreak',    speed: 12,  invert: false },
+        { sel: '.bgGear',      speed: 22,  invert: true  },
+        { sel: '.bgArrow',     speed: 32,  invert: false },
+        { sel: '.hNode',       speed: 26,  invert: false },
+        { sel: '.hPipe',       speed: 16,  invert: true  },
+        { sel: '.hBadge',      speed: 38,  invert: false },
+        { sel: '.hOrb',        speed: 42,  invert: true  },
+        { sel: '.hDot',        speed: 50,  invert: false },
+        { sel: '.hGear',       speed: 20,  invert: true  },
+        { sel: '.hArrow',      speed: 30,  invert: false },
+        { sel: '.hStreak',     speed: 10,  invert: false },
+        { sel: '.hGrid',       speed: 8,   invert: false }
+      ];
+
+      // Pre-collect elements with per-element random depth offset
+      var items = [];
+      layers.forEach(function(layer) {
+        var els = document.querySelectorAll(layer.sel);
+        els.forEach(function(el, i) {
+          items.push({
+            el: el,
+            speed: layer.speed * (0.7 + Math.random() * 0.6), // slight random variation
+            invert: layer.invert,
+            index: i
+          });
+        });
+      });
+
+      var mx = 0, my = 0; // normalized -1 to 1
+      var cx = 0, cy = 0; // current interpolated
+      var ticking = false;
+
+      document.addEventListener('mousemove', function(e) {
+        mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+        my = (e.clientY / window.innerHeight - 0.5) * 2;
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      });
+
+      function update() {
+        // Smooth interpolation
+        cx += (mx - cx) * 0.08;
+        cy += (my - cy) * 0.08;
+
+        items.forEach(function(item) {
+          var dir = item.invert ? -1 : 1;
+          var tx = cx * item.speed * dir;
+          var ty = cy * item.speed * dir * 0.6; // less vertical movement
+          item.el.style.transform = 'translate(' + tx.toFixed(1) + 'px, ' + ty.toFixed(1) + 'px)';
+        });
+
+        // Keep animating until converged
+        if (Math.abs(mx - cx) > 0.001 || Math.abs(my - cy) > 0.001) {
+          requestAnimationFrame(update);
+        } else {
+          ticking = false;
+        }
+      }
+    })();
   </script>
 </body>
 </html>
